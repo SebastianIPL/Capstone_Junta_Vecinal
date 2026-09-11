@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Inicio - Portal Vecinal{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Tarjeta de Bienvenida -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Bienvenido al Portal Comunitario</h1>
+            <p class="text-sm text-slate-500">Gestiona tus certificados, reservas de espacios e iniciativas locales.</p>
+        </div>
+        <div class="inline-flex items-center text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800">
+            Residente Activo: {{ user.rut }}
+        </div>
+    </div>
+
+    <!-- Accesos Directos a los Módulos -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Módulo Certificados -->
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg mb-4">
+                📄
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-1">Certificados</h2>
+            <p class="text-sm text-slate-500 mb-4">Solicita y descarga certificados de residencia oficiales con firma y código QR verificable.</p>
+            <a href="{% url 'portal:mis_certificados' %}" class="inline-block text-sm font-semibold text-blue-600 hover:text-blue-800">Ver mis certificados &rarr;</a>
+        </div>
+
+        <!-- Módulo Espacios -->
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg mb-4">
+                🏢
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-1">Espacios Comunes</h2>
+            <p class="text-sm text-slate-500 mb-4">Revisa disponibilidad y reserva la sede vecinal o multicancha sin traslape de horarios.</p>
+            <span class="inline-block text-xs font-medium text-slate-400">Próximamente disponible</span>
+        </div>
+
+        <!-- Módulo Avisos / Cartelera -->
+        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg mb-4">
+                📢
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-1">Noticias y Avisos</h2>
+            <p class="text-sm text-slate-500 mb-4">Infórmate sobre proyectos comunales, asambleas y anuncios relevantes del barrio.</p>
+            <span class="inline-block text-xs font-medium text-slate-400">Próximamente disponible</span>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

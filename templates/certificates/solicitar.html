@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Solicitar Certificado - Junta de Vecinos{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-slate-900">Solicitar Certificado de Residencia</h1>
+        <p class="text-sm text-slate-500 mt-1">Completa el formulario para que la directiva valide tu información.</p>
+    </div>
+
+    <!-- Resumen de datos registrados del solicitante -->
+    <div class="bg-slate-50 rounded-lg p-4 mb-6 border border-slate-200 text-xs text-slate-600 space-y-1">
+        <p><span class="font-semibold text-slate-800">Vecino(a):</span> {{ user.get_full_name|default:user.username }}</p>
+        <p><span class="font-semibold text-slate-800">RUT:</span> {{ user.rut }}</p>
+        <p><span class="font-semibold text-slate-800">Dirección registrada:</span> {{ user.address }}</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+        {% csrf_token %}
+
+        <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                {{ form.purpose.label }}
+            </label>
+            {{ form.purpose }}
+            {% if form.purpose.errors %}
+                <p class="text-xs text-rose-600 mt-1">{{ form.purpose.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                {{ form.address_proof.label }}
+            </label>
+            {{ form.address_proof }}
+            {% if form.address_proof.errors %}
+                <p class="text-xs text-rose-600 mt-1">{{ form.address_proof.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+            <a href="{% url 'portal:mis_certificados' %}" class="text-xs text-slate-500 hover:text-slate-800 font-medium">&larr; Cancelar</a>
+            <button type="submit" class="py-2.5 px-6 bg-blue-800 hover:bg-blue-900 text-white font-semibold text-sm rounded-lg shadow transition">
+                Enviar Solicitud
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Chat Comunitario - Portal Vecinal{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Canal de Comunicación Vecinal</h1>
+            <p class="text-sm text-slate-500">Espacio de diálogo, coordinación y consultas vecinales.</p>
+        </div>
+        <a href="{% url 'portal:dashboard' %}" class="text-sm font-semibold text-slate-600 hover:text-slate-800">&larr; Volver</a>
+    </div>
+
+    <!-- Caja del Chat -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[520px]">
+        <!-- Encabezado del chat -->
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-2xl">
+            <div class="flex items-center space-x-3">
+                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                <span class="font-bold text-slate-800 text-sm">Sala General Comunitaria</span>
+            </div>
+            <span class="text-xs text-slate-400">Canal moderado por la directiva</span>
+        </div>
+
+        <!-- Área de mensajes -->
+        <div class="flex-grow p-4 overflow-y-auto space-y-4">
+            <!-- Mensaje directiva -->
+            <div class="flex flex-col items-start max-w-lg">
+                <span class="text-[11px] font-semibold text-amber-600 mb-1">Directiva Junta de Vecinos</span>
+                <div class="bg-amber-50 border border-amber-200 text-slate-800 text-sm p-3 rounded-2xl rounded-tl-none">
+                    Bienvenidos al canal oficial de comunicación vecinal. Este espacio está destinado a consultas, coordinación de actividades y reportes comunitarios.
+                </div>
+                <span class="text-[10px] text-slate-400 mt-1">Hoy 09:00</span>
+            </div>
+
+            <!-- Mensaje propio de ejemplo -->
+            <div class="flex flex-col items-end max-w-lg ml-auto">
+                <span class="text-[11px] font-semibold text-blue-600 mb-1">Tú ({{ user.get_full_name|default:user.username }})</span>
+                <div class="bg-blue-600 text-white text-sm p-3 rounded-2xl rounded-tr-none">
+                    Hola a todos, gracias por habilitar este canal en la plataforma.
+                </div>
+                <span class="text-[10px] text-slate-400 mt-1">Hoy 09:15</span>
+            </div>
+        </div>
+
+        <!-- Barra de envío -->
+        <div class="p-4 border-t border-slate-100">
+            <form class="flex gap-2">
+                <input type="text" placeholder="Escribe un mensaje para la comunidad..." 
+                       class="flex-grow px-4 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600">
+                <button type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-sm font-semibold transition">
+                    Enviar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

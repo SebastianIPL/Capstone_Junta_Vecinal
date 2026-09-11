@@ -1,0 +1,60 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Cámaras Comunitarias - Portal Vecinal{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Circuito de Cámaras Comunitarias</h1>
+            <p class="text-sm text-slate-500">Monitoreo de seguridad y accesos autorizados del sector.</p>
+        </div>
+        <a href="{% url 'portal:dashboard' %}" class="text-sm font-semibold text-slate-600 hover:text-slate-800">&larr; Volver al Inicio</a>
+    </div>
+
+    <!-- Malla de cámaras simuladas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Cámara 1 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="bg-slate-900 aspect-video flex items-center justify-center relative text-slate-400">
+                <div class="text-center">
+                    <span class="text-3xl block mb-2">📹</span>
+                    <span class="text-xs font-mono">EN VIVO - ACCESO PRINCIPAL (AV. CENTRAL)</span>
+                </div>
+                <span class="absolute top-3 right-3 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+            </div>
+            <div class="p-4 flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm">Cámara 01: Acceso Poniente</h3>
+                    <p class="text-xs text-slate-500">Transmisión en tiempo real (1080p)</p>
+                </div>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded">Operativa</span>
+            </div>
+        </div>
+
+        <!-- Cámara 2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div class="bg-slate-900 aspect-video flex items-center justify-center relative text-slate-400">
+                <div class="text-center">
+                    <span class="text-3xl block mb-2">📹</span>
+                    <span class="text-xs font-mono">EN VIVO - PLAZA CENTRAL Y JUEGOS</span>
+                </div>
+                <span class="absolute top-3 right-3 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+            </div>
+            <div class="p-4 flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm">Cámara 02: Sector Plaza</h3>
+                    <p class="text-xs text-slate-500">Transmisión en tiempo real (1080p)</p>
+                </div>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded">Operativa</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

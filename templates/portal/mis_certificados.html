@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Mis Certificados{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+   <div class="flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-900">Mis Certificados de Residencia</h1>
+        <p class="text-sm text-slate-500">Historial y estado de tus solicitudes.</p>
+    </div>
+    <div class="space-x-3">
+        <a href="{% url 'portal:dashboard' %}" class="text-sm font-medium text-slate-500 hover:text-slate-800">Volver</a>
+        <a href="{% url 'certificates:solicitar' %}" class="bg-blue-800 hover:bg-blue-900 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-sm transition">
+            + Solicitar Certificado
+        </a>
+    </div>
+</div>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase">
+                <tr>
+                    <th class="p-4">ID</th>
+                    <th class="p-4">Finalidad</th>
+                    <th class="p-4">Fecha Solicitud</th>
+                    <th class="p-4">Estado</th>
+                    <th class="p-4 text-right">Acción</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for cert in certificados %}
+                <tr>
+                    <td class="p-4 font-bold text-slate-900">#{{ cert.id }}</td>
+                    <td class="p-4">{{ cert.purpose }}</td>
+                    <td class="p-4">{{ cert.created_at|date:"d-m-Y" }}</td>
+                    <td class="p-4">
+                        {% if cert.status == 'APROBADO' %}
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded-full">Aprobado</span>
+                        {% elif cert.status == 'RECHAZADO' %}
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-800 rounded-full">Rechazado</span>
+                        {% else %}
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-amber-100 text-amber-800 rounded-full">Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 text-right">
+                        {% if cert.status == 'APROBADO' %}
+                            <a href="{% url 'certificates:download_pdf' cert.id %}" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-3 py-1.5 rounded transition">
+                                Descargar PDF
+                            </a>
+                        {% else %}
+                            <span class="text-xs text-slate-400">No disponible</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-6 text-center text-slate-400">
+                        No has solicitado ningún certificado aún.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

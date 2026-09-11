@@ -1,0 +1,95 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Inicio - Portal Vecinal{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Tarjeta de Bienvenida -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Bienvenido al Portal Comunitario</h1>
+            <p class="text-sm text-slate-500">Accede a trámites, seguridad, espacios y comunicación en tu barrio.</p>
+        </div>
+        <div class="inline-flex items-center text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800">
+            Residente: {{ user.rut }}
+        </div>
+    </div>
+
+    <!-- Cuadrícula con los 5 Módulos Principales -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- 1. Módulo Certificados -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl mb-4">
+                    📄
+                </div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Certificados</h2>
+                <p class="text-sm text-slate-500 mb-4">Solicita y descarga certificados de residencia con código QR oficial y validación digital.</p>
+            </div>
+            <a href="{% url 'portal:mis_certificados' %}" class="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800">
+                Ver mis certificados &rarr;
+            </a>
+        </div>
+
+        <!-- 2. Módulo Espacios Comunes -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mb-4">
+                    🏢
+                </div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Espacios Comunes</h2>
+                <p class="text-sm text-slate-500 mb-4">Consulta la disponibilidad de la sede o multicancha y realiza reservas horarias.</p>
+            </div>
+            <a href="{% url 'spaces:mis_reservas' %}" class="inline-flex items-center text-sm font-semibold text-emerald-600 hover:text-emerald-800">
+                Ver espacios y reservar &rarr;
+            </a>
+        </div>
+
+        <!-- 3. Módulo Noticias y Avisos -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-4">
+                    📢
+                </div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Noticias y Avisos</h2>
+                <p class="text-sm text-slate-500 mb-4">Entérate de reuniones, asambleas, proyectos comunales y comunicados oficiales.</p>
+            </div>
+            <div>
+                <span class="inline-block text-xs font-medium bg-slate-100 text-slate-500 px-2.5 py-1 rounded-full">Próximamente</span>
+            </div>
+        </div>
+
+        <!-- 4. Módulo Cámaras de Seguridad -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl mb-4">
+                    📹
+                </div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Cámaras Comunitarias</h2>
+                <p class="text-sm text-slate-500 mb-4">Monitoreo y visualización de puntos de vigilancia del sector para apoyo a la seguridad vecinal.</p>
+            </div>
+            <a href="{% url 'portal:camaras' %}" class="inline-flex items-center text-sm font-semibold text-rose-600 hover:text-rose-800">
+                Acceder a cámaras &rarr;
+            </a>
+        </div>
+
+        <!-- 5. Módulo Chat Vecinal -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl mb-4">
+                    💬
+                </div>
+                <h2 class="text-lg font-bold text-slate-900 mb-1">Chat Comunitario</h2>
+                <p class="text-sm text-slate-500 mb-4">Canal de comunicación directo entre vecinos y directiva para alertas, dudas y coordinación.</p>
+            </div>
+            <a href="{% url 'portal:chat' %}" class="inline-flex items-center text-sm font-semibold text-purple-600 hover:text-purple-800">
+                Entrar al chat &rarr;
+            </a>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
