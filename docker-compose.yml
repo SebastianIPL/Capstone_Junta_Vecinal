@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: capstone_postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: junta_vecinal_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword2026
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: capstone_django_web
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - DATABASE_NAME=junta_vecinal_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgrespassword2026
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  media_volume:
