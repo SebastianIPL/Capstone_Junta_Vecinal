@@ -85,3 +85,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = 'portal:login'
 LOGIN_REDIRECT_URL = 'portal:dashboard'
 LOGOUT_REDIRECT_URL = 'portal:login'
+CERTIFICATE_SIGNER_NAME = "Nombre de la persona autorizada"
+CERTIFICATE_SIGNER_ROLE = "Presidente/a de la Junta de Vecinos"

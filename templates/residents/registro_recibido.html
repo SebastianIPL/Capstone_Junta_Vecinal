@@ -1,0 +1,8 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<main class="max-w-xl mx-auto p-8 bg-white rounded-xl shadow my-10 text-center">
+<h1 class="text-2xl font-bold">Solicitud recibida</h1>
+<p class="mt-4">Tu cuenta quedó pendiente de aprobación por la directiva. Cuando esté aprobada podrás iniciar sesión.</p>
+<a href="{% url 'portal:login' %}" class="text-blue-700 underline mt-5 inline-block">Volver al inicio de sesión</a>
+</main>
+{% endblock %}

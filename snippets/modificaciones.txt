@@ -1,0 +1,37 @@
+1) En residents/models.py, dentro de la clase Resident, añadir:
+
+    privacy_notice_version = models.CharField(max_length=40, blank=True, default='')
+    privacy_notice_acknowledged_at = models.DateTimeField(null=True, blank=True)
+
+2) En config/urls.py, dentro de urlpatterns, añadir:
+
+    path('cuentas/', include('residents.urls_registration')),
+
+3) En templates/portal/login.html, cerca del formulario de acceso, añadir:
+
+<p class="text-sm text-gray-600 mt-4">Utilizamos tus datos para gestionar el acceso y los servicios comunitarios. Consulta nuestra <a class="text-blue-700 underline" href="{% url 'residents:privacidad' %}">Política de Privacidad</a>.</p>
+<p class="mt-3"><a class="text-blue-700 underline" href="{% url 'residents:registro' %}">¿Eres vecino nuevo? Solicita tu registro</a></p>
+
+4) En templates/portal/directiva_dashboard.html, dentro de las tarjetas del panel, añadir:
+
+<a href="{% url 'residents:solicitudes_registro' %}" class="block p-4 bg-white rounded-xl border">Solicitudes de registro de vecinos →</a>
+
+5) En la carpeta principal del proyecto:
+
+python manage.py makemigrations residents
+python manage.py migrate
+python manage.py check
+python manage.py runserver
+
+6) Para iniciar sesión, el vecino debe usar el RUT con guion, sin puntos (ejemplo: 12345678-9).
+
+7) URLs:
+http://127.0.0.1:8000/cuentas/registro/
+http://127.0.0.1:8000/cuentas/privacidad/
+http://127.0.0.1:8000/cuentas/solicitudes/
+
+NOTAS:
+* Haz respaldo de db.sqlite3 antes de migrar. No elimines la base.
+* No borres ni reemplaces residents/models.py, portal/urls.py o los HTML existentes: agrega únicamente los fragmentos indicados.
+* Comprobar campos status y role en tu código local porque Github puede estar desactualizado.
+* Seguridad de producción: habilitar HTTPS, limitar intentos de registro/login, verificación de correo, datos mínimos, controles anti-abuso y revisar política real.

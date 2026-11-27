@@ -3,11 +3,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('portal.urls')),
     path('certificates/', include('certificates.urls')),
     path('espacios/', include('spaces.urls')),
+    path('avisos/', include('bulletins.urls')),
+    path(
+    "cuentas/",
+    include("residents.urls_registration")
+    
+),
 ]
 
 if settings.DEBUG:

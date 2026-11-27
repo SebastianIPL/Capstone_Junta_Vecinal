@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<main class="max-w-6xl mx-auto p-6 my-8">
+<h1 class="text-2xl font-bold mb-3">Solicitudes de registro pendientes</h1>
+<p class="text-gray-600 mb-5">Comprueba los datos antes de aprobar. No compartas el RUT fuera del sistema.</p>
+{% for message in messages %}<p class="p-3 bg-green-100 rounded mb-3">{{ message }}</p>{% endfor %}
+<div class="overflow-x-auto bg-white rounded-xl shadow">
+<table class="w-full text-left border-collapse"><thead><tr class="bg-gray-100"><th class="p-3">Nombre</th><th class="p-3">RUT</th><th class="p-3">Correo</th><th class="p-3">Fecha</th><th class="p-3">Acciones</th></tr></thead>
+<tbody>
+{% for vecino in pendientes %}
+<tr class="border-t"><td class="p-3">{{ vecino.get_full_name }}</td><td class="p-3">{{ vecino.rut }}</td><td class="p-3">{{ vecino.email }}</td><td class="p-3">{{ vecino.date_joined|date:'d/m/Y H:i' }}</td>
+<td class="p-3"><div class="flex gap-2">
+<form method="post" action="{% url 'residents:resolver_registro' vecino.pk 'aprobar' %}">{% csrf_token %}<button class="bg-green-700 text-white rounded px-3 py-2">Aprobar</button></form>
+<form method="post" action="{% url 'residents:resolver_registro' vecino.pk 'rechazar' %}">{% csrf_token %}<button class="bg-red-700 text-white rounded px-3 py-2">Rechazar</button></form>
+</div></td></tr>
+{% empty %}<tr><td colspan="5" class="p-4">No hay solicitudes pendientes.</td></tr>{% endfor %}
+</tbody></table></div>
+<a href="{% url 'portal:directiva_dashboard' %}" class="text-blue-700 mt-6 inline-block">Volver a la directiva</a>
+</main>
+{% endblock %}

@@ -1,0 +1,276 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Noticias y Avisos - Portal Vecinal{% endblock %}
+
+{% block content %}
+
+<div class="space-y-8">
+
+    <!-- ENCABEZADO -->
+    <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+
+            <div class="flex items-start gap-4">
+
+                <div class="w-14 h-14 rounded-xl bg-amber-100
+                            text-amber-600 flex items-center justify-center
+                            text-3xl shrink-0">
+                    📢
+                </div>
+
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-900">
+                        Noticias y Avisos
+                    </h1>
+
+                    <p class="text-sm text-slate-500 mt-2">
+                        Mantente informado sobre reuniones, actividades,
+                        emergencias y comunicados de nuestra comunidad.
+                    </p>
+                </div>
+
+            </div>
+
+            {% if puede_administrar %}
+                <a href="{% url 'bulletins:create' %}"
+                   class="inline-flex items-center justify-center
+                          bg-blue-700 hover:bg-blue-800
+                          text-white font-semibold text-sm
+                          px-5 py-3 rounded-xl shadow-sm
+                          transition whitespace-nowrap">
+
+                    + Publicar anuncio
+                </a>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- LISTADO DE ANUNCIOS -->
+    {% if bulletins %}
+
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {% for aviso in bulletins %}
+
+        <article class="bg-white rounded-2xl border border-slate-200
+                        shadow-sm hover:shadow-md transition
+                        overflow-hidden flex flex-col">
+
+            <!-- IMAGEN -->
+            {% if aviso.image %}
+
+                <div class="w-full h-52 bg-slate-100 overflow-hidden">
+
+                    <img src="{{ aviso.image.url }}"
+                         alt="Imagen del anuncio: {{ aviso.title }}"
+                         loading="lazy"
+                         class="w-full h-full object-cover
+                                hover:scale-105 transition-transform duration-300">
+
+                </div>
+
+            {% else %}
+
+                <!-- ENCABEZADO CUANDO NO HAY IMAGEN -->
+                <div class="w-full h-32 bg-gradient-to-r
+                            from-blue-800 to-blue-600
+                            flex items-center justify-center">
+
+                    <span class="text-5xl">📢</span>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- CONTENIDO -->
+            <div class="p-6 flex flex-col flex-grow">
+
+                <!-- PRIORIDAD Y FECHA -->
+                <div class="flex flex-wrap justify-between
+                            items-center gap-2 mb-4">
+
+                    {% if aviso.priority == 'URGENT' %}
+
+                        <span class="inline-flex items-center
+                                     bg-rose-100 text-rose-700
+                                     text-xs font-bold
+                                     px-3 py-1 rounded-full">
+
+                            🚨 Urgente
+                        </span>
+
+                    {% else %}
+
+                        <span class="inline-flex items-center
+                                     bg-blue-100 text-blue-700
+                                     text-xs font-bold
+                                     px-3 py-1 rounded-full">
+
+                            Informativo
+                        </span>
+
+                    {% endif %}
+
+                    <span class="text-xs text-slate-400">
+                        {{ aviso.created_at|date:"d/m/Y" }}
+                    </span>
+
+                </div>
+
+
+                <!-- TÍTULO -->
+                <h2 class="text-xl font-bold text-slate-900 mb-3 break-words">
+                    {{ aviso.title }}
+                </h2>
+
+
+                <!-- DESCRIPCIÓN -->
+                <div class="text-sm text-slate-600 leading-relaxed
+                            whitespace-pre-line break-words flex-grow">{{ aviso.content }}</div>
+
+
+                <!-- AUTOR -->
+                <div class="mt-5 pt-4 border-t border-slate-100">
+
+                    <p class="text-xs text-slate-400">
+                        Publicado por:
+                        {% if aviso.author %}
+                            {{ aviso.author.get_full_name|default:aviso.author.username }}
+                        {% else %}
+                            Directiva vecinal
+                        {% endif %}
+                    </p>
+
+                </div>
+
+
+                <!-- ESTADO: SOLO DIRECTIVA -->
+                {% if puede_administrar %}
+
+                    <div class="mt-3">
+
+                        {% if not aviso.is_published %}
+
+                            <span class="inline-block bg-amber-100
+                                         text-amber-700 text-xs font-semibold
+                                         px-3 py-1 rounded-full">
+                                Borrador
+                            </span>
+
+                        {% elif aviso.expires_at and aviso.expires_at <= ahora %}
+
+                            <span class="inline-block bg-rose-100
+                                         text-rose-700 text-xs font-semibold
+                                         px-3 py-1 rounded-full">
+                                Vencido
+                            </span>
+
+                        {% else %}
+
+                            <span class="inline-block bg-emerald-100
+                                         text-emerald-700 text-xs font-semibold
+                                         px-3 py-1 rounded-full">
+                                Publicado
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- ACCIONES DE ADMINISTRACIÓN -->
+                    <div class="flex flex-wrap gap-3 mt-5">
+
+                        <a href="{% url 'bulletins:edit' aviso.pk %}"
+                           class="flex-1 text-center bg-amber-100
+                                  hover:bg-amber-200 text-amber-800
+                                  text-sm font-semibold px-4 py-2.5
+                                  rounded-lg transition">
+
+                            ✏️ Editar
+                        </a>
+
+                        <form method="post"
+                              action="{% url 'bulletins:delete' aviso.pk %}"
+                              class="flex-1"
+                              onsubmit="return confirm('¿Seguro que deseas eliminar este anuncio?');">
+
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    class="w-full bg-rose-100 hover:bg-rose-200
+                                           text-rose-700 text-sm font-semibold
+                                           px-4 py-2.5 rounded-lg transition">
+
+                                🗑️ Eliminar
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+    {% else %}
+
+    <!-- SIN PUBLICACIONES -->
+    <section class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm p-12 text-center">
+
+        <div class="text-5xl mb-4">
+            📭
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-800 mb-2">
+            Todavía no hay anuncios disponibles
+        </h2>
+
+        <p class="text-sm text-slate-500">
+            Los comunicados de la junta de vecinos aparecerán aquí.
+        </p>
+
+        {% if puede_administrar %}
+
+            <a href="{% url 'bulletins:create' %}"
+               class="inline-block bg-blue-700 hover:bg-blue-800
+                      text-white font-semibold text-sm px-5 py-3
+                      rounded-xl mt-6 transition">
+
+                Publicar primer anuncio
+            </a>
+
+        {% endif %}
+
+    </section>
+
+    {% endif %}
+
+
+    <!-- VOLVER AL PORTAL -->
+    <div>
+        <a href="{% url 'portal:dashboard' %}"
+           class="inline-flex items-center text-sm font-semibold
+                  text-blue-700 hover:text-blue-900 transition">
+
+            ← Volver al Portal Comunitario
+
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

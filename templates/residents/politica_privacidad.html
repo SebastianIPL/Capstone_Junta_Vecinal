@@ -1,0 +1,350 @@
+
+{% extends "base/base.html" %}
+
+{% block title %}Política de Privacidad - SUT{% endblock %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto py-8 px-4">
+
+    <div class="bg-white rounded-2xl shadow-sm
+                border border-slate-200 p-6 md:p-10">
+
+        <div class="mb-8 border-b border-slate-200 pb-6">
+            <div class="text-4xl mb-4">🔐</div>
+
+            <h1 class="text-3xl font-bold text-slate-900">
+                Política de Privacidad
+            </h1>
+
+            <p class="text-slate-500 mt-3">
+                Sistema de Unidad Territorial (SUT)
+            </p>
+
+            <p class="text-sm text-slate-400 mt-2">
+                Versión 1.0 — Noviembre de 2026
+            </p>
+        </div>
+
+        <div class="space-y-8 text-slate-700 leading-relaxed">
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    1. Introducción
+                </h2>
+
+                <p>
+                    El Sistema de Unidad Territorial (SUT)
+                    es una plataforma digital destinada a
+                    facilitar la gestión comunitaria,
+                    los servicios vecinales y la comunicación
+                    entre vecinos, directiva y personal
+                    autorizado.
+                </p>
+
+                <p class="mt-3">
+                    SUT se compromete a tratar los datos
+                    personales de manera responsable,
+                    transparente y segura, respetando
+                    la legislación chilena aplicable.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    2. Datos personales recopilados
+                </h2>
+
+                <p>
+                    Para permitir el funcionamiento de sus
+                    servicios, SUT puede recopilar:
+                </p>
+
+                <ul class="list-disc pl-6 mt-3 space-y-2">
+                    <li>Nombre y apellidos.</li>
+                    <li>Rol Único Tributario (RUT).</li>
+                    <li>Correo electrónico.</li>
+                    <li>Número de teléfono.</li>
+                    <li>Dirección de residencia.</li>
+                    <li>Fecha de nacimiento, cuando corresponda.</li>
+                    <li>Datos de acceso y autenticación.</li>
+                    <li>Solicitudes de certificados.</li>
+                    <li>Reservas de espacios comunitarios.</li>
+                    <li>Solicitudes de acceso al portón simulado.</li>
+                    <li>Mensajes enviados a través del chat privado.</li>
+                    <li>Documentos adjuntos proporcionados por el usuario.</li>
+                </ul>
+
+                <p class="mt-3">
+                    Las contraseñas se almacenan mediante
+                    los mecanismos de protección de Django,
+                    utilizando funciones criptográficas
+                    de derivación y verificación.
+                    No se almacenan como texto plano.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    3. Finalidad del tratamiento
+                </h2>
+
+                <p>
+                    Los datos recopilados se utilizan
+                    exclusivamente para finalidades
+                    relacionadas con los servicios
+                    de SUT, incluyendo:
+                </p>
+
+                <ul class="list-disc pl-6 mt-3 space-y-2">
+                    <li>Crear y administrar cuentas de vecinos.</li>
+                    <li>Verificar solicitudes de registro.</li>
+                    <li>Gestionar certificados de residencia.</li>
+                    <li>Administrar reservas comunitarias.</li>
+                    <li>Publicar y gestionar avisos.</li>
+                    <li>Facilitar la comunicación comunitaria.</li>
+                    <li>Gestionar solicitudes simuladas de acceso.</li>
+                    <li>Garantizar la seguridad de las cuentas.</li>
+                    <li>Mantener registros necesarios de las operaciones.</li>
+                </ul>
+
+                <p class="mt-3">
+                    SUT no utilizará los datos personales
+                    para publicidad comercial ajena a
+                    las finalidades informadas.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    4. Protección y seguridad
+                </h2>
+
+                <p>
+                    SUT incorpora mecanismos de autenticación,
+                    contraseñas protegidas, validación
+                    de formularios y restricciones de
+                    acceso según roles.
+                </p>
+
+                <p class="mt-3">
+                    El acceso a determinadas funcionalidades
+                    está limitado a usuarios autorizados,
+                    como directiva, administradores y guardias.
+                </p>
+
+                <p class="mt-3">
+                    Se procurará mantener la confidencialidad,
+                    integridad y disponibilidad de los datos
+                    mediante controles técnicos y organizativos
+                    apropiados.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    5. Acceso a la información
+                </h2>
+
+                <p>
+                    La información personal solo deberá ser
+                    consultada por usuarios autorizados
+                    cuando sea necesaria para cumplir
+                    sus funciones dentro de SUT.
+                </p>
+
+                <ul class="list-disc pl-6 mt-3 space-y-2">
+                    <li>
+                        Vecinos: acceso a sus propios
+                        datos y solicitudes.
+                    </li>
+                    <li>
+                        Directiva: gestión de solicitudes
+                        y servicios comunitarios autorizados.
+                    </li>
+                    <li>
+                        Guardias: gestión de solicitudes de
+                        acceso y conversaciones asignadas.
+                    </li>
+                    <li>
+                        Administradores: mantenimiento y
+                        administración autorizada del sistema.
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    6. Derechos de los titulares
+                </h2>
+
+                <p>
+                    Los usuarios conservan sus derechos
+                    sobre sus datos personales.
+                    De acuerdo con la legislación aplicable,
+                    podrán solicitar, cuando corresponda:
+                </p>
+
+                <ul class="list-disc pl-6 mt-3 space-y-2">
+                    <li>Acceso a sus datos personales.</li>
+                    <li>Rectificación de información incorrecta.</li>
+                    <li>Supresión de datos cuando proceda.</li>
+                    <li>Oposición a determinados tratamientos.</li>
+                    <li>Portabilidad de datos cuando corresponda.</li>
+                    <li>Bloqueo de datos en los casos previstos por ley.</li>
+                    <li>
+                        Revocación del consentimiento
+                        cuando este sea la base del tratamiento.
+                    </li>
+                </ul>
+
+                <p class="mt-3">
+                    SUT deberá tramitar las solicitudes
+                    mediante el canal de contacto que
+                    habilite oficialmente para este fin.
+                    Las solicitudes serán evaluadas conforme
+                    a la normativa vigente.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    7. Conservación de datos
+                </h2>
+
+                <p>
+                    SUT conservará los datos personales
+                    únicamente durante el tiempo necesario
+                    para las finalidades informadas y
+                    para cumplir las obligaciones legales
+                    que correspondan.
+                </p>
+
+                <p class="mt-3">
+                    Cuando ya no sean necesarios y no exista
+                    una obligación que justifique conservarlos,
+                    se deberán eliminar o anonimizar
+                    de forma segura.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    8. Servicios de terceros
+                </h2>
+
+                <p>
+                    SUT puede facilitar enlaces externos,
+                    como grupos comunitarios de WhatsApp
+                    o transmisiones públicas de cámaras.
+                </p>
+
+                <p class="mt-3">
+                    Estos servicios pueden contar con
+                    políticas de privacidad propias.
+                    Se recomienda revisarlas antes
+                    de utilizarlos.
+                </p>
+
+                <p class="mt-3">
+                    En caso de utilizar proveedores de
+                    alojamiento o almacenamiento,
+                    deberán adoptarse medidas apropiadas
+                    para proteger los datos tratados.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    9. Cookies y sesiones
+                </h2>
+
+                <p>
+                    SUT utiliza cookies técnicas necesarias
+                    para mantener las sesiones de usuario
+                    y proteger los formularios frente
+                    a solicitudes no autorizadas.
+                </p>
+
+                <p class="mt-3">
+                    Estas cookies permiten el funcionamiento
+                    de la autenticación y de los mecanismos
+                    de seguridad del sistema.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    10. Registro y aprobación de cuentas
+                </h2>
+
+                <p>
+                    Al completar el formulario de registro,
+                    el usuario declara haber recibido
+                    información sobre el tratamiento
+                    de sus datos personales.
+                </p>
+
+                <p class="mt-3">
+                    Las cuentas nuevas permanecerán en
+                    estado pendiente hasta que sean
+                    revisadas por la directiva autorizada.
+                </p>
+
+                <p class="mt-3">
+                    La aprobación permitirá acceder
+                    a las funcionalidades correspondientes
+                    al rol asignado.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    11. Modificaciones de la política
+                </h2>
+
+                <p>
+                    SUT podrá actualizar esta política
+                    para reflejar cambios en sus
+                    funcionalidades, medidas de seguridad
+                    o exigencias legales.
+                </p>
+
+                <p class="mt-3">
+                    La versión vigente estará disponible
+                    para consulta desde el portal.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3">
+                    12. Marco normativo
+                </h2>
+
+                <p>
+                    Esta política considera la normativa
+                    chilena sobre protección de datos
+                    personales, incluyendo la Ley N.º 19.628
+                    y sus modificaciones introducidas
+                    por la Ley N.º 21.719,
+                    conforme a sus respectivas fechas
+                    de entrada en vigencia.
+                </p>
+            </section>
+
+        </div>
+
+        <div class="mt-10 pt-6 border-t border-slate-200">
+            <a href="{% url 'portal:login' %}"
+               class="inline-block bg-slate-900
+                      hover:bg-slate-800 text-white
+                      font-semibold px-6 py-3
+                      rounded-xl transition">
+                Volver al inicio de sesión
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

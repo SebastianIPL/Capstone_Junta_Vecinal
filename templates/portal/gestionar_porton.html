@@ -1,0 +1,395 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Guardia - Control de Portón{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <section class="bg-slate-900 text-white
+                    p-6 rounded-2xl shadow-sm">
+
+        <div class="flex flex-col sm:flex-row
+                    justify-between items-start gap-4">
+
+            <div>
+                <span class="bg-amber-500 text-slate-950
+                             text-xs font-bold px-3 py-1
+                             rounded-lg">
+                    SIMULACIÓN
+                </span>
+
+                <h1 class="text-2xl font-bold mt-3">
+                    🛡️ Panel de Guardia y Accesos
+                </h1>
+
+                <p class="text-slate-300 text-sm mt-2">
+                    Gestiona las solicitudes de apertura
+                    registradas en el portal.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+
+                <a href="{% url 'portal:porton' %}"
+                   class="bg-slate-700 hover:bg-slate-600
+                          text-white text-sm px-4 py-2
+                          rounded-lg">
+                    Vista vecino
+                </a>
+
+                {% if puede_configurar %}
+                <a href="{% url 'portal:crear_porton' %}"
+                   class="bg-blue-600 hover:bg-blue-700
+                          text-white font-semibold text-sm
+                          px-4 py-2 rounded-lg">
+                    + Agregar portón
+                </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="bg-blue-50 border border-blue-200
+                text-blue-900 rounded-xl p-4 text-sm">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- CONTADOR -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl p-6 shadow-sm">
+
+        <p class="text-sm text-slate-500">
+            Solicitudes pendientes
+        </p>
+
+        <p class="text-4xl font-bold text-amber-600 mt-2">
+            {{ total_pendientes }}
+        </p>
+
+    </section>
+
+    <!-- PORTONES CONFIGURADOS -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-200">
+
+            <h2 class="text-xl font-bold">
+                Portones configurados
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Configuración ficticia para el Capstone.
+            </p>
+
+        </div>
+
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {% for porton in portones %}
+
+            <div class="border border-slate-200
+                        rounded-xl p-5">
+
+                <div class="flex justify-between
+                            items-start gap-3">
+
+                    <div>
+                        <h3 class="font-bold text-slate-900">
+                            🚪 {{ porton.name }}
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-2">
+                            {{ porton.location|default:"Sin ubicación" }}
+                        </p>
+                    </div>
+
+                    {% if porton.is_active %}
+                    <span class="text-xs font-bold
+                                 bg-emerald-100 text-emerald-800
+                                 rounded-full px-3 py-1">
+                        Disponible
+                    </span>
+                    {% else %}
+                    <span class="text-xs font-bold
+                                 bg-slate-100 text-slate-600
+                                 rounded-full px-3 py-1">
+                        Inactivo
+                    </span>
+                    {% endif %}
+
+                </div>
+
+                <p class="text-xs text-slate-500 mt-4">
+                    Teléfono ficticio:
+                    {{ porton.phone_number|default:"No configurado" }}
+                </p>
+
+                {% if puede_configurar %}
+                <a href="{% url 'portal:editar_porton' porton.id %}"
+                   class="inline-flex text-blue-700
+                          font-semibold text-sm mt-4
+                          hover:underline">
+                    Editar configuración →
+                </a>
+                {% endif %}
+
+            </div>
+
+            {% empty %}
+
+            <p class="text-sm text-slate-500">
+                Todavía no existen portones configurados.
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    <!-- SOLICITUDES PENDIENTES -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-200
+                    flex flex-wrap justify-between
+                    items-center gap-3">
+
+            <h2 class="text-xl font-bold text-slate-900">
+                Solicitudes pendientes
+            </h2>
+
+            <span class="text-xs text-amber-800 bg-amber-100
+                         px-3 py-2 rounded-lg font-semibold">
+                Esperando revisión
+            </span>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm text-left">
+
+                <thead class="bg-slate-50 text-slate-600">
+
+                    <tr>
+                        <th class="p-4">ID</th>
+                        <th class="p-4">Vecino</th>
+                        <th class="p-4">Portón</th>
+                        <th class="p-4">Método</th>
+                        <th class="p-4">Fecha</th>
+                        <th class="p-4">Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for solicitud in pendientes %}
+
+                    <tr class="hover:bg-slate-50">
+
+                        <td class="p-4">
+                            #{{ solicitud.id }}
+                        </td>
+
+                        <td class="p-4">
+
+                            <p class="font-semibold text-slate-900">
+                                {{ solicitud.resident.get_full_name|default:solicitud.resident.username }}
+                            </p>
+
+                            <p class="text-xs text-slate-500">
+                                {{ solicitud.resident.rut }}
+                            </p>
+
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.gate.name }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.get_method_display }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.created_at|date:"d/m/Y H:i" }}
+                        </td>
+
+                        <td class="p-4">
+
+                            <div class="flex flex-wrap gap-2">
+
+                                <!-- APROBAR -->
+                                <form method="post"
+                                      action="{% url 'portal:resolver_solicitud_porton' solicitud.id 'aprobar' %}">
+
+                                    {% csrf_token %}
+
+                                    <button type="submit"
+                                            class="bg-emerald-600
+                                                   hover:bg-emerald-700
+                                                   text-white font-semibold
+                                                   px-3 py-2 rounded-lg">
+                                        Aprobar
+                                    </button>
+
+                                </form>
+
+                                <!-- RECHAZAR -->
+                                <form method="post"
+                                      action="{% url 'portal:resolver_solicitud_porton' solicitud.id 'rechazar' %}">
+
+                                    {% csrf_token %}
+
+                                    <button type="submit"
+                                            class="bg-rose-600
+                                                   hover:bg-rose-700
+                                                   text-white font-semibold
+                                                   px-3 py-2 rounded-lg">
+                                        Rechazar
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="6"
+                            class="p-10 text-center text-slate-500">
+                            No hay solicitudes pendientes.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- HISTORIAL GENERAL -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-200">
+
+            <h2 class="text-xl font-bold">
+                Historial de accesos simulados
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Últimas 30 solicitudes gestionadas.
+            </p>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm text-left">
+
+                <thead class="bg-slate-50 text-slate-600">
+                    <tr>
+                        <th class="p-4">ID</th>
+                        <th class="p-4">Vecino</th>
+                        <th class="p-4">Portón</th>
+                        <th class="p-4">Estado</th>
+                        <th class="p-4">Atendido por</th>
+                        <th class="p-4">Fecha</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for solicitud in historial %}
+
+                    <tr>
+                        <td class="p-4">
+                            #{{ solicitud.id }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.resident.get_full_name|default:solicitud.resident.username }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.gate.name }}
+                        </td>
+
+                        <td class="p-4">
+
+                            {% if solicitud.status == 'APPROVED' %}
+                            <span class="text-emerald-700 font-semibold">
+                                Aprobada
+                            </span>
+                            {% else %}
+                            <span class="text-rose-700 font-semibold">
+                                Rechazada
+                            </span>
+                            {% endif %}
+
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.processed_by|default:"No disponible" }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.processed_at|date:"d/m/Y H:i" }}
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="6"
+                            class="p-10 text-center text-slate-500">
+                            Todavía no hay solicitudes gestionadas.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <a href="{% url 'portal:directiva_dashboard' %}"
+       class="inline-flex text-blue-700 font-semibold text-sm">
+        ← Volver al Panel Directiva
+    </a>
+<a href="{% url 'portal:chat_guardia_bandeja' %}"
+   class="inline-flex items-center
+          bg-purple-700 hover:bg-purple-800
+          text-white font-semibold
+          px-4 py-3 rounded-xl">
+    💬 Ver mensajes de vecinos
+</a>
+</div>
+
+{% endblock %}

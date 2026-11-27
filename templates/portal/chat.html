@@ -1,59 +1,186 @@
+
 {% extends 'base/base.html' %}
 
 {% block title %}Chat Comunitario - Portal Vecinal{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6">
-    <div class="flex justify-between items-center">
+
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <div class="flex flex-col sm:flex-row
+                justify-between sm:items-center gap-4">
+
         <div>
-            <h1 class="text-2xl font-bold text-slate-900">Canal de Comunicación Vecinal</h1>
-            <p class="text-sm text-slate-500">Espacio de diálogo, coordinación y consultas vecinales.</p>
+            <h1 class="text-2xl font-bold text-slate-900">
+                Chat Comunitario
+            </h1>
+
+            <p class="text-sm text-slate-500 mt-2">
+                Conoce los grupos de comunicación
+                disponibles para nuestra comunidad.
+            </p>
         </div>
-        <a href="{% url 'portal:dashboard' %}" class="text-sm font-semibold text-slate-600 hover:text-slate-800">&larr; Volver</a>
+
+        <a href="{% url 'portal:dashboard' %}"
+           class="text-sm font-semibold text-blue-700
+                  hover:text-blue-900">
+            ← Volver al portal
+        </a>
+
     </div>
 
-    <!-- Caja del Chat -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[520px]">
-        <!-- Encabezado del chat -->
-        <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-2xl">
-            <div class="flex items-center space-x-3">
-                <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-                <span class="font-bold text-slate-800 text-sm">Sala General Comunitaria</span>
+    <!-- PRESENTACIÓN -->
+    <section class="bg-green-700 text-white
+                    p-8 rounded-2xl shadow-sm">
+
+        <div class="flex flex-col sm:flex-row
+                    gap-5 sm:items-center">
+
+            <div class="w-16 h-16 rounded-2xl
+                        bg-white/20 flex items-center
+                        justify-center text-4xl">
+                💬
             </div>
-            <span class="text-xs text-slate-400">Canal moderado por la directiva</span>
+
+            <div>
+                <h2 class="text-2xl font-bold">
+                    Grupos de WhatsApp Vecinales
+                </h2>
+
+                <p class="text-sm text-green-100 mt-2">
+                    Participa en los espacios de comunicación
+                    habilitados por la directiva.
+                </p>
+            </div>
+
         </div>
 
-        <!-- Área de mensajes -->
-        <div class="flex-grow p-4 overflow-y-auto space-y-4">
-            <!-- Mensaje directiva -->
-            <div class="flex flex-col items-start max-w-lg">
-                <span class="text-[11px] font-semibold text-amber-600 mb-1">Directiva Junta de Vecinos</span>
-                <div class="bg-amber-50 border border-amber-200 text-slate-800 text-sm p-3 rounded-2xl rounded-tl-none">
-                    Bienvenidos al canal oficial de comunicación vecinal. Este espacio está destinado a consultas, coordinación de actividades y reportes comunitarios.
+    </section>
+
+    <!-- GRUPOS DISPONIBLES -->
+    {% if grupos %}
+
+    <section class="grid grid-cols-1
+                    md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {% for grupo in grupos %}
+
+        <article class="bg-white rounded-2xl
+                        border border-slate-200 shadow-sm
+                        hover:shadow-md transition
+                        flex flex-col overflow-hidden">
+
+            <div class="p-6 flex flex-col flex-grow">
+
+                <!-- ICONO -->
+                <div class="w-14 h-14 bg-green-100
+                            rounded-xl flex items-center
+                            justify-center text-3xl mb-5">
+                    💬
                 </div>
-                <span class="text-[10px] text-slate-400 mt-1">Hoy 09:00</span>
+
+                <!-- ESTADO -->
+                <span class="inline-flex self-start
+                             items-center gap-2
+                             text-xs font-semibold
+                             text-green-700 bg-green-50
+                             rounded-full px-3 py-1 mb-4">
+
+                    <span class="w-2 h-2 bg-green-500
+                                 rounded-full"></span>
+
+                    Grupo disponible
+                </span>
+
+                <!-- NOMBRE -->
+                <h3 class="text-xl font-bold
+                           text-slate-900 mb-3 break-words">
+                    {{ grupo.name }}
+                </h3>
+
+                <!-- DESCRIPCIÓN -->
+                <p class="text-sm text-slate-600
+                          leading-relaxed flex-grow
+                          whitespace-pre-line break-words">{{ grupo.description|default:"Grupo de comunicación de la Junta de Vecinos." }}</p>
+
+                <!-- BOTÓN -->
+                <a href="{{ grupo.invite_link }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="mt-6 w-full inline-flex
+                          items-center justify-center
+                          gap-2 bg-green-600
+                          hover:bg-green-700
+                          text-white font-bold text-sm
+                          px-5 py-3 rounded-xl transition">
+
+                    💬 Unirse al grupo
+                    <span>↗</span>
+
+                </a>
+
             </div>
 
-            <!-- Mensaje propio de ejemplo -->
-            <div class="flex flex-col items-end max-w-lg ml-auto">
-                <span class="text-[11px] font-semibold text-blue-600 mb-1">Tú ({{ user.get_full_name|default:user.username }})</span>
-                <div class="bg-blue-600 text-white text-sm p-3 rounded-2xl rounded-tr-none">
-                    Hola a todos, gracias por habilitar este canal en la plataforma.
-                </div>
-                <span class="text-[10px] text-slate-400 mt-1">Hoy 09:15</span>
-            </div>
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+    {% else %}
+
+    <!-- ESTADO VACÍO -->
+    <section class="bg-white rounded-2xl
+                    border border-slate-200
+                    p-12 text-center shadow-sm">
+
+        <div class="text-5xl mb-4">
+            📭
         </div>
 
-        <!-- Barra de envío -->
-        <div class="p-4 border-t border-slate-100">
-            <form class="flex gap-2">
-                <input type="text" placeholder="Escribe un mensaje para la comunidad..." 
-                       class="flex-grow px-4 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-600">
-                <button type="button" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl text-sm font-semibold transition">
-                    Enviar
-                </button>
-            </form>
-        </div>
-    </div>
+        <h2 class="text-xl font-bold
+                   text-slate-900 mb-3">
+            No hay grupos disponibles
+        </h2>
+
+        <p class="text-sm text-slate-500">
+            La directiva todavía no ha publicado
+            grupos de WhatsApp para la comunidad.
+        </p>
+
+    </section>
+
+    {% endif %}
+
+    <!-- NORMAS -->
+    <section class="bg-blue-50
+                    border border-blue-100
+                    rounded-2xl p-6">
+
+        <h3 class="text-lg font-bold
+                   text-blue-900 mb-3">
+            🛡️ Normas de convivencia
+        </h3>
+
+        <ul class="text-sm text-blue-800
+                   space-y-2 list-disc pl-5">
+
+            <li>Respeta a los demás vecinos.</li>
+            <li>Evita compartir información privada.</li>
+            <li>No envíes spam ni mensajes ofensivos.</li>
+            <li>Utiliza los grupos para sus fines comunitarios.</li>
+            <li>Sigue las indicaciones de los moderadores.</li>
+
+        </ul>
+
+        <p class="text-xs text-blue-700 mt-4">
+            Los grupos funcionan en WhatsApp,
+            una plataforma externa al portal.
+        </p>
+
+    </section>
+
 </div>
+
 {% endblock %}

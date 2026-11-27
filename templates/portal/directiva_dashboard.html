@@ -1,271 +1,406 @@
 {% extends 'base/base.html' %}
-
-{% block title %}Panel de Gestión Directiva{% endblock %}
-
+{% block title %}Panel Directiva - Junta de Vecinos{% endblock %}
 {% block content %}
-<div class="space-y-6">
-
-    <!-- Encabezado Principal -->
-    <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between md:items-center gap-4">
-        <div>
-            <div class="flex items-center space-x-2">
-                <span class="px-2.5 py-0.5 rounded text-xs font-semibold bg-amber-500 text-slate-950">Directiva Comunal</span>
-                <span class="text-xs text-slate-400">Padrón total: {{ total_vecinos }} vecinos</span>
+<div class="max-w-7xl mx-auto space-y-6">
+    <section class="bg-slate-900 text-white p-6 rounded-2xl shadow-sm">
+        <div class="flex flex-col sm:flex-row justify-between gap-4">
+            <div>
+                <span class="inline-block bg-amber-500 text-slate-950
+                             text-xs font-bold px-3 py-1 rounded-lg">
+                    Directiva Comunal
+                </span>
+                <h1 class="text-2xl font-bold mt-3">
+                    Panel de Control y Aprobaciones
+                </h1>
+                <p class="text-sm text-slate-300 mt-2">
+                    Gestiona solicitudes de certificados, reservas
+                    de espacios y servicios comunitarios.
+                </p>
             </div>
-            <h1 class="text-2xl font-bold mt-1">Panel de Control y Aprobaciones</h1>
-            <p class="text-sm text-slate-400">Revisión y validación de trámites vecinales y uso de instalaciones.</p>
-        </div>
-        <div class="flex items-center space-x-3">
-            <a href="{% url 'portal:dashboard' %}" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-xl transition">
-                &larr; Portal Vecinal
-            </a>
-            {% if user.is_staff %}
-                <a href="/admin/" target="_blank" class="text-xs bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3.5 py-2 rounded-xl transition">
+            <div class="flex flex-wrap items-start gap-2">
+                <a href="{% url 'portal:dashboard' %}"
+                   class="bg-slate-700 hover:bg-slate-600
+                          px-4 py-2 rounded-lg text-sm transition">
+                    Volver al portal
+                </a>
+                {% if user.is_staff or user.is_superuser %}
+                <a href="/admin/"
+                   class="bg-blue-600 hover:bg-blue-700
+                          px-4 py-2 rounded-lg text-sm transition">
                     Django Admin
                 </a>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
+    </section>
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-sm text-slate-500">
+                Vecinos registrados
+            </p>
+            <p class="text-3xl font-bold text-slate-900 mt-2">
+                {{ total_vecinos|default:"0" }}
+            </p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-sm text-slate-500">
+                Certificados pendientes
+            </p>
+            <p class="text-3xl font-bold text-amber-600 mt-2">
+                {{ pendientes_cert|default:"0" }}
+            </p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-sm text-slate-500">
+                Certificados aprobados
+            </p>
+            <p class="text-3xl font-bold text-blue-600 mt-2">
+                {{ total_aprobados_cert|default:"0" }}
+            </p>
+        </div>
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <p class="text-sm text-slate-500">
+                Reservas pendientes
+            </p>
+            <p class="text-3xl font-bold text-emerald-600 mt-2">
+                {{ pendientes_reservas|default:"0" }}
+            </p>
+        </div>
+    </section>
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="{% url 'bulletins:list' %}"
+           class="bg-white p-6 rounded-2xl border border-slate-200
+                  shadow-sm hover:shadow-md hover:border-amber-300
+                  transition flex flex-col">
+            <div class="w-12 h-12 bg-amber-100 rounded-xl
+                        flex items-center justify-center text-2xl mb-4">
+                📢
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Noticias y Avisos
+            </h2>
+            <p class="text-sm text-slate-500 mb-5 flex-grow">
+                Publica anuncios, agrega fotografías,
+                edita comunicados y administra las noticias
+                de la Junta de Vecinos.
+            </p>
+            <span class="text-sm font-semibold text-amber-600">
+                Administrar avisos →
+            </span>
+        </a>
+        <a href="{% url 'portal:gestionar_grupos' %}"
+           class="bg-white p-6 rounded-2xl border border-slate-200
+                  shadow-sm hover:shadow-md hover:border-green-300
+                  transition flex flex-col">
+            <div class="w-12 h-12 bg-green-100 rounded-xl
+                        flex items-center justify-center text-2xl mb-4">
+                💬
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Administrar Chat Comunitario
+            </h2>
+            <p class="text-sm text-slate-500 mb-5 flex-grow">
+                Crea nuevos grupos de WhatsApp,
+                modifica sus enlaces de invitación,
+                actualiza sus nombres y controla
+                cuáles aparecen para los vecinos.
+            </p>
+            <span class="text-sm font-semibold text-green-700">
+                Gestionar grupos de WhatsApp →
+            </span>
+        </a>
+        <a href="{% url 'portal:gestionar_camaras' %}"
+           class="bg-white p-6 rounded-2xl border border-slate-200
+                  shadow-sm hover:shadow-md hover:border-blue-300
+                  transition flex flex-col">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl
+                        flex items-center justify-center text-2xl mb-4">
+                📹
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Administrar Cámaras
+            </h2>
+            <p class="text-sm text-slate-500 mb-5 flex-grow">
+                Agrega cámaras públicas, modifica
+                sus enlaces de transmisión, administra
+                sus ubicaciones y controla cuáles
+                están disponibles para los vecinos.
+            </p>
+            <span class="text-sm font-semibold text-blue-700">
+                Gestionar cámaras →
+            </span>
+        </a>
+        <a href="{% url 'portal:gestionar_porton' %}"
+           class="bg-white p-6 rounded-2xl border
+                  border-slate-200 shadow-sm
+                  hover:shadow-md hover:border-emerald-300
+                  transition flex flex-col">
+            <div class="w-12 h-12 bg-emerald-100
+                        rounded-xl flex items-center
+                        justify-center text-2xl mb-4">
+                🛡️
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Control de Portón y Guardia
+            </h2>
+            <p class="text-sm text-slate-500 mb-5 flex-grow">
+                Configura portones ficticios,
+                recibe solicitudes de acceso,
+                aprueba o rechaza peticiones
+                y revisa el historial.
+            </p>
+            <span class="text-sm font-semibold text-emerald-700">
+                Gestionar accesos →
+            </span>
+        </a>
+        <a href="{% url 'portal:gestionar_guardias' %}"
+           class="bg-white p-6 rounded-2xl
+                  border border-slate-200 shadow-sm
+                  hover:shadow-md hover:border-emerald-300
+                  transition flex flex-col">
+            <div class="w-12 h-12 bg-emerald-100
+                        rounded-xl flex items-center
+                        justify-center text-2xl mb-4">
+                🛡️
+            </div>
+            <h2 class="text-lg font-bold text-slate-900 mb-2">
+                Administrar Guardias
+            </h2>
+            <p class="text-sm text-slate-500 mb-5 flex-grow">
+                Designa guardias para atender las
+                solicitudes de apertura simulada
+                y administra sus permisos.
+            </p>
+            <span class="text-sm font-semibold text-emerald-700">
+                Gestionar guardias →
+            </span>
+        </a>
+        <!-- SOLICITUDES DE REGISTRO DE VECINOS -->
+        <a href="{% url 'residents:solicitudes_registro' %}"
+           class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-violet-300 transition flex flex-col">
+            <div class="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center text-2xl mb-4">👥</div>
+            <h2 class="text-lg font-bold text-slate-900 mb-2">Solicitudes de Registro</h2>
+            <p class="text-sm text-slate-500 mb-5 flex-grow">
+                Revisa los registros de nuevos vecinos y aprueba o rechaza sus solicitudes de acceso al portal.
+            </p>
+            <span class="text-sm font-semibold text-violet-700">Revisar solicitudes de vecinos →</span>
+        </a>
+    </section>
+    <div class="flex flex-wrap gap-3 border-b border-slate-200 pb-4">
+        <a href="{% url 'portal:directiva_dashboard' %}?tab=certificados"
+           class="px-4 py-3 rounded-xl text-sm font-semibold transition
+                  {% if active_tab != 'reservas' %}
+                      bg-blue-700 text-white
+                  {% else %}
+                      bg-white text-slate-700 border border-slate-200 hover:bg-slate-50
+                  {% endif %}">
+            📄 Solicitudes de Certificados
+        </a>
+        <a href="{% url 'portal:directiva_dashboard' %}?tab=reservas"
+           class="px-4 py-3 rounded-xl text-sm font-semibold transition
+                  {% if active_tab == 'reservas' %}
+                      bg-emerald-700 text-white
+                  {% else %}
+                      bg-white text-slate-700 border border-slate-200 hover:bg-slate-50
+                  {% endif %}">
+            🏢 Reservas de Espacios
+        </a>
     </div>
-
-    <!-- Pestañas Selectoras (Tabs) -->
-    <div class="border-b border-slate-200">
-        <nav class="flex space-x-4" aria-label="Tabs">
-            <button id="tab-btn-certificados" onclick="switchTab('certificados')"
-                    class="pb-4 px-3 text-sm font-bold flex items-center gap-2 border-b-2 transition {% if active_tab == 'certificados' %}border-blue-600 text-blue-600{% else %}border-transparent text-slate-500 hover:text-slate-700{% endif %}">
-                <span>📄 Solicitudes de Certificados</span>
-                <span class="px-2 py-0.5 text-xs rounded-full {% if pendientes_cert > 0 %}bg-amber-100 text-amber-800 font-extrabold{% else %}bg-slate-100 text-slate-500{% endif %}">
-                    {{ pendientes_cert }} pendientes
-                </span>
-            </button>
-
-            <button id="tab-btn-reservas" onclick="switchTab('reservas')"
-                    class="pb-4 px-3 text-sm font-bold flex items-center gap-2 border-b-2 transition {% if active_tab == 'reservas' %}border-emerald-600 text-emerald-600{% else %}border-transparent text-slate-500 hover:text-slate-700{% endif %}">
-                <span>🏢 Reservas de Espacios Comunes</span>
-                <span class="px-2 py-0.5 text-xs rounded-full {% if pendientes_reservas > 0 %}bg-emerald-100 text-emerald-800 font-extrabold{% else %}bg-slate-100 text-slate-500{% endif %}">
-                    {{ pendientes_reservas }} pendientes
-                </span>
-            </button>
-        </nav>
-    </div>
-
-    <!-- SECCIÓN 1: SOLICITUDES DE CERTIFICADOS -->
-    <div id="panel-certificados" class="space-y-6 {% if active_tab != 'certificados' %}hidden{% endif %}">
-        <!-- Métricas Rápidas Certificados -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Certificados Pendientes</p>
-                    <p class="text-2xl font-extrabold text-amber-600 mt-1">{{ pendientes_cert }}</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">⏳</div>
-            </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Certificados Emitidos / Aprobados</p>
-                    <p class="text-2xl font-extrabold text-blue-600 mt-1">{{ total_aprobados_cert }}</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">✅</div>
-            </div>
+    {% if active_tab != 'reservas' %}
+    <section class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-200">
+            <h2 class="text-xl font-bold text-slate-900">
+                Solicitudes de Certificados
+            </h2>
+            <p class="text-sm text-slate-500 mt-1">
+                Revisa y resuelve las solicitudes
+                de certificados de residencia.
+            </p>
         </div>
-
-        <!-- Tabla de Certificados -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center">
-                <h2 class="text-base font-bold text-slate-900">Historial de Solicitudes de Residencia</h2>
-                <span class="text-xs text-slate-400">Mostrando las más recientes</span>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-600">
-                    <thead class="bg-slate-50 text-xs font-semibold text-slate-500 uppercase border-b border-slate-100">
-                        <tr>
-                            <th class="p-4">ID</th>
-                            <th class="p-4">Vecino / RUT</th>
-                            <th class="p-4">Dirección</th>
-                            <th class="p-4">Finalidad</th>
-                            <th class="p-4">Comprobante</th>
-                            <th class="p-4">Estado</th>
-                            <th class="p-4 text-center">Acción Directiva</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        {% for cert in solicitudes_cert %}
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <td class="p-4 font-bold text-slate-900">#{{ cert.id }}</td>
-                            <td class="p-4">
-                                <div class="font-medium text-slate-800">{{ cert.resident.get_full_name|default:cert.resident.username }}</div>
-                                <div class="text-xs text-slate-400">{{ cert.resident.rut }}</div>
-                            </td>
-                            <td class="p-4 text-xs text-slate-600 max-w-xs truncate">{{ cert.resident.address }}</td>
-                            <td class="p-4 text-xs">{{ cert.purpose }}</td>
-                            <td class="p-4 text-xs">
-                                {% if cert.address_proof %}
-                                    <a href="{{ cert.address_proof.url }}" target="_blank" class="text-blue-600 hover:underline font-semibold">Ver archivo</a>
-                                {% else %}
-                                    <span class="text-slate-400">Sin archivo</span>
-                                {% endif %}
-                            </td>
-                            <td class="p-4">
-                                {% if cert.status == 'APROBADO' %}
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded-full">Aprobado</span>
-                                {% elif cert.status == 'RECHAZADO' %}
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-800 rounded-full">Rechazado</span>
-                                {% else %}
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-amber-100 text-amber-800 rounded-full">Pendiente</span>
-                                {% endif %}
-                            </td>
-                            <td class="p-4 text-center space-x-2">
-                                {% if cert.status == 'PENDIENTE' %}
-                                    <a href="{% url 'portal:resolver_certificado' cert.id 'aprobar' %}"
-                                       class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition">
-                                        Aprobar
-                                    </a>
-                                    <a href="{% url 'portal:resolver_certificado' cert.id 'rechazar' %}"
-                                       onclick="return confirm('¿Seguro que deseas rechazar este certificado?');"
-                                       class="inline-block bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition">
-                                        Rechazar
-                                    </a>
-                                {% elif cert.status == 'APROBADO' %}
-                                    <a href="{% url 'certificates:download_pdf' cert.id %}" target="_blank"
-                                       class="text-xs text-blue-600 hover:underline font-medium">
-                                        Descargar PDF
-                                    </a>
-                                {% else %}
-                                    <span class="text-xs text-slate-400">Gestionado</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="p-6 text-center text-slate-400 text-sm">
-                                No hay solicitudes de certificados registradas.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-slate-50 text-slate-600">
+                    <tr>
+                        <th class="p-4">ID</th>
+                        <th class="p-4">Vecino</th>
+                        <th class="p-4">Finalidad</th>
+                        <th class="p-4">Comprobante</th>
+                        <th class="p-4">Estado</th>
+                        <th class="p-4">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for cert in solicitudes_cert %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4">
+                            #{{ cert.id }}
+                        </td>
+                        <td class="p-4">
+                            <p class="font-semibold text-slate-900">
+                                {{ cert.resident.get_full_name|default:cert.resident.username }}
+                            </p>
+                            <p class="text-xs text-slate-500">
+                                {{ cert.resident.rut }}
+                            </p>
+                        </td>
+                        <td class="p-4">
+                            {{ cert.purpose }}
+                        </td>
+                        <td class="p-4">
+                            {% if cert.address_proof %}
+                            <a href="{{ cert.address_proof.url }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="text-blue-700 hover:underline font-medium">
+                                Ver archivo
+                            </a>
+                            {% else %}
+                            <span class="text-slate-400">
+                                Sin archivo
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4">
+                            <span class="font-medium text-slate-700">
+                                {{ cert.get_status_display|default:cert.status }}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            {% if cert.status == 'PENDIENTE' %}
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{% url 'portal:resolver_certificado' cert.id 'aprobar' %}"
+                                   class="bg-emerald-600 hover:bg-emerald-700
+                                          text-white px-3 py-2 rounded-lg transition">
+                                    Aprobar
+                                </a>
+                                <a href="{% url 'portal:resolver_certificado' cert.id 'rechazar' %}"
+                                   onclick="return confirm('¿Seguro que deseas rechazar este certificado?');"
+                                   class="bg-rose-600 hover:bg-rose-700
+                                          text-white px-3 py-2 rounded-lg transition">
+                                    Rechazar
+                                </a>
+                            </div>
+                            {% elif cert.status == 'APROBADO' %}
+                            <a href="{% url 'certificates:download_pdf' cert.id %}"
+                               class="text-blue-700 hover:underline font-semibold">
+                                Descargar PDF
+                            </a>
+                            {% else %}
+                            <span class="text-slate-400">
+                                Gestionado
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6"
+                            class="p-10 text-center text-slate-500">
+                            No hay solicitudes de certificados registradas.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </div>
-
-    <!-- SECCIÓN 2: RESERVAS DE ESPACIOS COMUNES -->
-    <div id="panel-reservas" class="space-y-6 {% if active_tab != 'reservas' %}hidden{% endif %}">
-        <!-- Métricas Rápidas Espacios -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Reservas por Confirmar</p>
-                    <p class="text-2xl font-extrabold text-amber-600 mt-1">{{ pendientes_reservas }}</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">📅</div>
+    </section>
+    {% endif %}
+    {% if active_tab == 'reservas' %}
+    <section class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-200
+                    flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">
+                    Reservas de Espacios Comunes
+                </h2>
+                <p class="text-sm text-slate-500 mt-1">
+                    Reservas aprobadas:
+                    {{ total_aprobadas_reservas|default:"0" }}
+                </p>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-semibold uppercase text-slate-500">Reservas Aprobadas</p>
-                    <p class="text-2xl font-extrabold text-emerald-600 mt-1">{{ total_aprobadas_reservas }}</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">🏢</div>
-            </div>
+            <a href="{% url 'spaces:crear_espacio' %}"
+               class="bg-slate-900 hover:bg-slate-800 text-white
+                      px-4 py-2 rounded-lg text-sm font-semibold transition">
+                + Nuevo espacio
+            </a>
         </div>
-
-        <!-- Tabla de Reservas -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center">
-                <h2 class="text-base font-bold text-slate-900">Solicitudes de Uso de Recintos</h2>
-                <a href="{% url 'spaces:crear_espacio' %}" class="text-xs bg-slate-900 hover:bg-slate-800 text-white font-semibold px-3 py-1.5 rounded-lg transition">
-                    + Nuevo Espacio Comunitario
-                </a>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-600">
-                    <thead class="bg-slate-50 text-xs font-semibold text-slate-500 uppercase border-b border-slate-100">
-                        <tr>
-                            <th class="p-4">ID</th>
-                            <th class="p-4">Espacio</th>
-                            <th class="p-4">Solicitante</th>
-                            <th class="p-4">Motivo de Uso</th>
-                            <th class="p-4">Horario Solicitado</th>
-                            <th class="p-4">Estado</th>
-                            <th class="p-4 text-center">Acción Directiva</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        {% for res in solicitudes_reservas %}
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <td class="p-4 font-bold text-slate-900">#{{ res.id }}</td>
-                            <td class="p-4 font-semibold text-slate-800">{{ res.space.name }}</td>
-                            <td class="p-4">
-                                <div class="text-slate-800 font-medium">{{ res.resident.get_full_name|default:res.resident.username }}</div>
-                                <div class="text-xs text-slate-400">{{ res.resident.rut }}</div>
-                            </td>
-                            <td class="p-4 text-xs">{{ res.purpose }}</td>
-                            <td class="p-4 text-xs">
-                                <div>{{ res.start_time|date:"d-m-Y H:i" }}</div>
-                                <div class="text-slate-400">hasta {{ res.end_time|date:"H:i" }}</div>
-                            </td>
-                            <td class="p-4">
-                                {% if res.status == 'APROBADO' %}
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-emerald-100 text-emerald-800 rounded-full">Aprobada</span>
-                                {% elif res.status == 'RECHAZADO' %}
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-800 rounded-full">Rechazada</span>
-                                {% else %}
-                                    <span class="px-2.5 py-1 text-xs font-semibold bg-amber-100 text-amber-800 rounded-full">Pendiente</span>
-                                {% endif %}
-                            </td>
-                            <td class="p-4 text-center space-x-2">
-                                {% if res.status == 'PENDIENTE' %}
-                                    <a href="{% url 'portal:resolver_reserva' res.id 'aprobar' %}"
-                                       class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition">
-                                        Aprobar
-                                    </a>
-                                    <a href="{% url 'portal:resolver_reserva' res.id 'rechazar' %}"
-                                       onclick="return confirm('¿Seguro que deseas rechazar esta reserva?');"
-                                       class="inline-block bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm transition">
-                                        Rechazar
-                                    </a>
-                                {% else %}
-                                    <span class="text-xs text-slate-400">Gestionada</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="p-6 text-center text-slate-400 text-sm">
-                                No hay solicitudes de reserva registradas.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-slate-50 text-slate-600">
+                    <tr>
+                        <th class="p-4">ID</th>
+                        <th class="p-4">Espacio</th>
+                        <th class="p-4">Vecino</th>
+                        <th class="p-4">Fecha y horario</th>
+                        <th class="p-4">Estado</th>
+                        <th class="p-4">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for res in solicitudes_reservas %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4">
+                            #{{ res.id }}
+                        </td>
+                        <td class="p-4">
+                            <p class="font-semibold text-slate-900">
+                                {{ res.space.name }}
+                            </p>
+                            <p class="text-xs text-slate-500">
+                                {{ res.purpose }}
+                            </p>
+                        </td>
+                        <td class="p-4">
+                            {{ res.resident.get_full_name|default:res.resident.username }}
+                        </td>
+                        <td class="p-4">
+                            {{ res.start_time|date:"d/m/Y H:i" }}
+                            <p class="text-xs text-slate-500 mt-1">
+                                Hasta:
+                                {{ res.end_time|date:"d/m/Y H:i" }}
+                            </p>
+                        </td>
+                        <td class="p-4">
+                            <span class="font-medium text-slate-700">
+                                {{ res.get_status_display|default:res.status }}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            {% if res.status == 'PENDIENTE' %}
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{% url 'portal:resolver_reserva' res.id 'aprobar' %}"
+                                   class="bg-emerald-600 hover:bg-emerald-700
+                                          text-white px-3 py-2 rounded-lg transition">
+                                    Aprobar
+                                </a>
+                                <a href="{% url 'portal:resolver_reserva' res.id 'rechazar' %}"
+                                   onclick="return confirm('¿Seguro que deseas rechazar esta reserva?');"
+                                   class="bg-rose-600 hover:bg-rose-700
+                                          text-white px-3 py-2 rounded-lg transition">
+                                    Rechazar
+                                </a>
+                            </div>
+                            {% else %}
+                            <span class="text-slate-400">
+                                Gestionada
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6"
+                            class="p-10 text-center text-slate-500">
+                            No hay solicitudes de reserva registradas.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    </div>
-
+    </section>
+    {% endif %}
 </div>
-
-<script>
-function switchTab(tabName) {
-    const certPanel = document.getElementById('panel-certificados');
-    const reservasPanel = document.getElementById('panel-reservas');
-    const certBtn = document.getElementById('tab-btn-certificados');
-    const reservasBtn = document.getElementById('tab-btn-reservas');
-
-    if (tabName === 'certificados') {
-        certPanel.classList.remove('hidden');
-        reservasPanel.classList.add('hidden');
-
-        certBtn.className = 'pb-4 px-3 text-sm font-bold flex items-center gap-2 border-b-2 transition border-blue-600 text-blue-600';
-        reservasBtn.className = 'pb-4 px-3 text-sm font-bold flex items-center gap-2 border-b-2 transition border-transparent text-slate-500 hover:text-slate-700';
-    } else {
-        certPanel.classList.add('hidden');
-        reservasPanel.classList.remove('hidden');
-
-        reservasBtn.className = 'pb-4 px-3 text-sm font-bold flex items-center gap-2 border-b-2 transition border-emerald-600 text-emerald-600';
-        certBtn.className = 'pb-4 px-3 text-sm font-bold flex items-center gap-2 border-b-2 transition border-transparent text-slate-500 hover:text-slate-700';
-    }
-
-    const newUrl = new URL(window.location);
-    newUrl.searchParams.set('tab', tabName);
-    window.history.replaceState({}, '', newUrl);
-}
-</script>
 {% endblock %}

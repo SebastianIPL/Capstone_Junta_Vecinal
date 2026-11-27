@@ -1,60 +1,211 @@
+
 {% extends 'base/base.html' %}
 
 {% block title %}Cámaras Comunitarias - Portal Vecinal{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <div class="flex justify-between items-center">
+
+<div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <div class="flex flex-col sm:flex-row
+                justify-between sm:items-center gap-4">
+
         <div>
-            <h1 class="text-2xl font-bold text-slate-900">Circuito de Cámaras Comunitarias</h1>
-            <p class="text-sm text-slate-500">Monitoreo de seguridad y accesos autorizados del sector.</p>
-        </div>
-        <a href="{% url 'portal:dashboard' %}" class="text-sm font-semibold text-slate-600 hover:text-slate-800">&larr; Volver al Inicio</a>
-    </div>
+            <h1 class="text-2xl font-bold text-slate-900">
+                Cámaras Comunitarias
+            </h1>
 
-    <!-- Malla de cámaras simuladas -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Cámara 1 -->
-        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-            <div class="bg-slate-900 aspect-video flex items-center justify-center relative text-slate-400">
-                <div class="text-center">
-                    <span class="text-3xl block mb-2">📹</span>
-                    <span class="text-xs font-mono">EN VIVO - ACCESO PRINCIPAL (AV. CENTRAL)</span>
-                </div>
-                <span class="absolute top-3 right-3 flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                </span>
-            </div>
-            <div class="p-4 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-slate-800 text-sm">Cámara 01: Acceso Poniente</h3>
-                    <p class="text-xs text-slate-500">Transmisión en tiempo real (1080p)</p>
-                </div>
-                <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded">Operativa</span>
-            </div>
+            <p class="text-sm text-slate-500 mt-2">
+                Consulta las cámaras públicas compartidas
+                por la directiva de la Junta de Vecinos.
+            </p>
         </div>
 
-        <!-- Cámara 2 -->
-        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-            <div class="bg-slate-900 aspect-video flex items-center justify-center relative text-slate-400">
-                <div class="text-center">
-                    <span class="text-3xl block mb-2">📹</span>
-                    <span class="text-xs font-mono">EN VIVO - PLAZA CENTRAL Y JUEGOS</span>
-                </div>
-                <span class="absolute top-3 right-3 flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                </span>
-            </div>
-            <div class="p-4 flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-slate-800 text-sm">Cámara 02: Sector Plaza</h3>
-                    <p class="text-xs text-slate-500">Transmisión en tiempo real (1080p)</p>
-                </div>
-                <span class="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded">Operativa</span>
-            </div>
-        </div>
+        <a href="{% url 'portal:dashboard' %}"
+           class="text-sm font-semibold text-blue-700
+                  hover:text-blue-900">
+
+            &larr; Volver al portal
+        </a>
     </div>
+
+    <!-- PRESENTACIÓN -->
+    <section class="bg-slate-900 text-white
+                    rounded-2xl p-6 sm:p-8">
+
+        <div class="flex flex-col sm:flex-row
+                    items-start sm:items-center gap-5">
+
+            <div class="w-16 h-16 bg-white/10
+                        rounded-2xl flex items-center
+                        justify-center text-4xl">
+                📹
+            </div>
+
+            <div>
+                <h2 class="text-2xl font-bold">
+                    Visualización de Cámaras Públicas
+                </h2>
+
+                <p class="text-sm text-slate-300 mt-2">
+                    Accede a las transmisiones públicas
+                    disponibles. La disponibilidad depende
+                    de sus respectivos proveedores.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- LISTADO -->
+    {% if camaras %}
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {% for camara in camaras %}
+
+        <article class="bg-white rounded-2xl
+                        border border-slate-200
+                        shadow-sm overflow-hidden">
+
+            <!-- VISUALIZADOR -->
+            <div class="aspect-video bg-slate-950
+                        flex items-center justify-center">
+
+                {% if camara.embed_url %}
+
+                <iframe
+                    src="{{ camara.embed_url }}"
+                    title="{{ camara.name }}"
+                    class="w-full h-full"
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                </iframe>
+
+                {% else %}
+
+                <div class="text-center p-6">
+
+                    <div class="text-5xl mb-4">
+                        📹
+                    </div>
+
+                    <p class="text-slate-200
+                              font-semibold mb-2">
+                        Transmisión externa
+                    </p>
+
+                    <p class="text-slate-400 text-sm">
+                        Abre la cámara desde
+                        el sitio oficial del proveedor.
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- INFORMACIÓN -->
+            <div class="p-6">
+
+                <div class="flex flex-wrap
+                            items-start justify-between gap-3">
+
+                    <div>
+                        <h3 class="text-lg font-bold
+                                   text-slate-900">
+                            {{ camara.name }}
+                        </h3>
+
+                        <p class="text-sm text-slate-500 mt-1">
+                            📍 {{ camara.location }}
+                        </p>
+                    </div>
+
+                    <span class="text-xs font-semibold
+                                 bg-blue-100 text-blue-700
+                                 px-3 py-1 rounded-full">
+                        Fuente pública
+                    </span>
+
+                </div>
+
+                {% if camara.description %}
+
+                <p class="text-sm text-slate-600
+                          mt-4 whitespace-pre-line">{{ camara.description }}</p>
+
+                {% endif %}
+
+                <p class="text-xs text-slate-500 mt-4">
+                    Fuente: {{ camara.source_name }}
+                </p>
+
+                <!-- ENLACE OFICIAL -->
+                <a href="{{ camara.source_url }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="mt-5 inline-flex w-full
+                          items-center justify-center gap-2
+                          bg-blue-700 hover:bg-blue-800
+                          text-white text-sm font-bold
+                          px-5 py-3 rounded-xl transition">
+
+                    Abrir transmisión original ↗
+                </a>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+    {% else %}
+
+    <!-- SIN CÁMARAS -->
+    <section class="bg-white rounded-2xl
+                    border border-slate-200
+                    p-12 text-center">
+
+        <div class="text-5xl mb-4">
+            📹
+        </div>
+
+        <h2 class="text-xl font-bold text-slate-900 mb-3">
+            No hay cámaras disponibles
+        </h2>
+
+        <p class="text-sm text-slate-500">
+            La directiva todavía no ha publicado
+            cámaras públicas para la comunidad.
+        </p>
+
+    </section>
+
+    {% endif %}
+
+    <!-- AVISO -->
+    <div class="bg-amber-50 border border-amber-200
+                rounded-xl p-5">
+
+        <p class="text-sm text-amber-900">
+            <strong>Información importante:</strong>
+            las cámaras mostradas pertenecen a fuentes
+            externas. Su reproducción puede interrumpirse,
+            requerir abrir el sitio original o no estar
+            disponible permanentemente. Este portal
+            no constituye un servicio de vigilancia
+            ni de respuesta ante emergencias.
+        </p>
+
+    </div>
+
 </div>
+
 {% endblock %}

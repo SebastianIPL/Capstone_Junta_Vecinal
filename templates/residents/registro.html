@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<main class="max-w-2xl mx-auto p-6 my-8 bg-white rounded-2xl shadow">
+  <h1 class="text-2xl font-bold mb-2">Registro de vecinos</h1>
+  <p class="text-gray-600 mb-5">Tu solicitud será revisada por la directiva. No podrás iniciar sesión hasta que sea aprobada.</p>
+  <form method="post" class="space-y-4">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div>
+        <label for="{{ field.id_for_label }}" class="block font-medium mb-1">{{ field.label }}</label>
+        <div class="[&_input]:w-full [&_input]:border [&_input]:rounded-lg [&_input]:p-2 [&_input[type=checkbox]]:w-auto">{{ field }}</div>
+        {% if field.help_text %}<p class="text-sm text-gray-500">{{ field.help_text }}</p>{% endif %}
+        {% for error in field.errors %}<p class="text-sm text-red-700">{{ error }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    <p class="text-sm">Lee la <a class="text-blue-700 underline" href="{% url 'residents:privacidad' %}" target="_blank" rel="noopener">Política de Privacidad</a> antes de registrarte.</p>
+    <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white rounded-lg p-3 font-semibold">Enviar solicitud de registro</button>
+  </form>
+  <a class="text-blue-700 inline-block mt-5" href="{% url 'portal:login' %}">Ya tengo cuenta</a>
+</main>
+{% endblock %}

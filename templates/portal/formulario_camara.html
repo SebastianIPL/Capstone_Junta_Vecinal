@@ -1,0 +1,218 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}{{ titulo }} - Junta de Vecinos{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- VOLVER -->
+    <a href="{% url 'portal:gestionar_camaras' %}"
+       class="inline-flex items-center text-sm font-semibold
+              text-blue-700 hover:text-blue-900 transition">
+        &larr; Volver a administrar cámaras
+    </a>
+
+    <!-- FORMULARIO -->
+    <section class="bg-white rounded-2xl border border-slate-200
+                    shadow-sm overflow-hidden">
+
+        <!-- ENCABEZADO -->
+        <div class="bg-slate-900 text-white p-6">
+
+            <h1 class="text-2xl font-bold">
+                {{ titulo }}
+            </h1>
+
+            <p class="text-sm text-slate-300 mt-2">
+                Agrega o modifica una cámara pública
+                para mostrarla en el Portal Vecinal.
+            </p>
+
+        </div>
+
+        <!-- CAMPOS -->
+        <form method="post" class="p-6 sm:p-8 space-y-6">
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 border border-red-200
+                        text-red-700 p-4 rounded-xl">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <!-- NOMBRE -->
+            <div>
+
+                <label for="{{ form.name.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Nombre de la cámara
+                </label>
+
+                {{ form.name }}
+
+                {% for error in form.name.errors %}
+                <p class="text-red-600 text-sm mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- UBICACIÓN -->
+            <div>
+
+                <label for="{{ form.location.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Ubicación de la cámara
+                </label>
+
+                {{ form.location }}
+
+                {% for error in form.location.errors %}
+                <p class="text-red-600 text-sm mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- DESCRIPCIÓN -->
+            <div>
+
+                <label for="{{ form.description.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Descripción
+                </label>
+
+                {{ form.description }}
+
+                <p class="text-xs text-slate-500 mt-2">
+                    Describe qué lugar muestra la cámara
+                    y qué información puede aportar.
+                </p>
+
+                {% for error in form.description.errors %}
+                <p class="text-red-600 text-sm mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- PROVEEDOR -->
+            <div>
+
+                <label for="{{ form.source_name.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Fuente o proveedor
+                </label>
+
+                {{ form.source_name }}
+
+                <p class="text-xs text-slate-500 mt-2">
+                    Indica el nombre del canal, organización
+                    o plataforma que publica la transmisión.
+                </p>
+
+                {% for error in form.source_name.errors %}
+                <p class="text-red-600 text-sm mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- URL -->
+            <div>
+
+                <label for="{{ form.source_url.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Enlace público de la cámara
+                </label>
+
+                {{ form.source_url }}
+
+                <p class="text-xs text-slate-500 mt-2">
+                    Pega una URL HTTPS de una transmisión pública.
+                    Si es un enlace compatible de YouTube,
+                    el portal intentará mostrar el video
+                    directamente.
+                </p>
+
+                {% for error in form.source_url.errors %}
+                <p class="text-red-600 text-sm mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- ESTADO -->
+            <div class="bg-blue-50 border border-blue-200
+                        rounded-xl p-5">
+
+                <div class="flex items-center gap-3">
+
+                    {{ form.is_active }}
+
+                    <label for="{{ form.is_active.id_for_label }}"
+                           class="text-sm font-bold text-blue-900">
+                        Mostrar cámara a los vecinos
+                    </label>
+
+                </div>
+
+                <p class="text-xs text-blue-800 mt-3">
+                    Si desactivas esta opción,
+                    la cámara no aparecerá en el Portal Vecinal.
+                    Podrás volver a activarla cuando quieras
+                    desde la administración.
+                </p>
+
+                {% for error in form.is_active.errors %}
+                <p class="text-red-600 text-sm mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- BOTONES -->
+            <div class="flex flex-col sm:flex-row gap-3
+                        pt-5 border-t border-slate-200">
+
+                <button type="submit"
+                        class="flex-1 bg-blue-700
+                               hover:bg-blue-800
+                               text-white font-bold
+                               px-6 py-3 rounded-xl transition">
+                    Guardar cámara
+                </button>
+
+                <a href="{% url 'portal:gestionar_camaras' %}"
+                   class="flex-1 bg-slate-100
+                          hover:bg-slate-200
+                          text-slate-700 text-center
+                          font-semibold px-6 py-3
+                          rounded-xl transition">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,198 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Administrar Cámaras - Directiva{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <section class="bg-white rounded-2xl
+                    border border-slate-200 shadow-sm p-6">
+
+        <div class="flex flex-col sm:flex-row
+                    justify-between sm:items-center gap-4">
+
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">
+                    Administrar Cámaras Públicas
+                </h1>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    Agrega, modifica, activa o elimina
+                    cámaras del Portal Vecinal.
+                </p>
+            </div>
+
+            <a href="{% url 'portal:crear_camara' %}"
+               class="inline-flex items-center justify-center
+                      bg-blue-700 hover:bg-blue-800
+                      text-white font-bold text-sm
+                      px-5 py-3 rounded-xl transition">
+
+                + Agregar cámara
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- LISTADO -->
+    {% if camaras %}
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {% for camara in camaras %}
+
+        <article class="bg-white rounded-2xl
+                        border border-slate-200
+                        shadow-sm p-6">
+
+            <div class="flex justify-between items-start
+                        gap-3 mb-4">
+
+                <div class="w-12 h-12 bg-blue-100
+                            rounded-xl flex items-center
+                            justify-center text-2xl">
+                    📹
+                </div>
+
+                {% if camara.is_active %}
+
+                <span class="text-xs font-semibold
+                             text-green-700 bg-green-100
+                             px-3 py-1 rounded-full">
+                    Activa
+                </span>
+
+                {% else %}
+
+                <span class="text-xs font-semibold
+                             text-slate-600 bg-slate-100
+                             px-3 py-1 rounded-full">
+                    Oculta
+                </span>
+
+                {% endif %}
+            </div>
+
+            <h2 class="text-xl font-bold text-slate-900">
+                {{ camara.name }}
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-2">
+                📍 {{ camara.location }}
+            </p>
+
+            {% if camara.description %}
+
+            <p class="text-sm text-slate-600 mt-4
+                      whitespace-pre-line">{{ camara.description }}</p>
+
+            {% endif %}
+
+            <div class="bg-slate-50 rounded-xl
+                        p-4 mt-5 space-y-2">
+
+                <p class="text-xs text-slate-500">
+                    Proveedor
+                </p>
+
+                <p class="text-sm font-semibold text-slate-800">
+                    {{ camara.source_name }}
+                </p>
+
+                <a href="{{ camara.source_url }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="inline-block text-sm text-blue-700
+                          hover:underline break-all">
+
+                    Ver fuente pública ↗
+
+                </a>
+
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="flex gap-3 mt-5">
+
+                <a href="{% url 'portal:editar_camara' camara.pk %}"
+                   class="flex-1 bg-blue-100 hover:bg-blue-200
+                          text-blue-700 text-center
+                          font-semibold text-sm
+                          px-4 py-3 rounded-xl transition">
+
+                    ✏️ Editar
+                </a>
+
+                <form method="post"
+                      action="{% url 'portal:eliminar_camara' camara.pk %}"
+                      class="flex-1"
+                      onsubmit="return confirm('¿Eliminar esta cámara del portal?');">
+
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="w-full bg-rose-100
+                                   hover:bg-rose-200
+                                   text-rose-700 font-semibold
+                                   text-sm px-4 py-3
+                                   rounded-xl transition">
+
+                        🗑️ Eliminar
+                    </button>
+
+                </form>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+    {% else %}
+
+    <section class="bg-white rounded-2xl
+                    border border-slate-200
+                    p-12 text-center">
+
+        <div class="text-5xl mb-4">📹</div>
+
+        <h2 class="text-xl font-bold mb-3">
+            No hay cámaras registradas
+        </h2>
+
+        <p class="text-sm text-slate-500 mb-6">
+            Comienza agregando una cámara pública
+            para que los vecinos puedan consultarla.
+        </p>
+
+        <a href="{% url 'portal:crear_camara' %}"
+           class="inline-flex bg-blue-700
+                  hover:bg-blue-800 text-white
+                  font-semibold px-5 py-3 rounded-xl">
+
+            Agregar primera cámara
+
+        </a>
+
+    </section>
+
+    {% endif %}
+
+    <a href="{% url 'portal:directiva_dashboard' %}"
+       class="inline-flex text-sm font-semibold
+              text-blue-700 hover:text-blue-900">
+
+        ← Volver al Panel Directiva
+
+    </a>
+
+</div>
+
+{% endblock %}

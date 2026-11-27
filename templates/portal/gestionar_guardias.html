@@ -1,0 +1,220 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Administrar Guardias{% endblock %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <section class="bg-slate-900 text-white
+                    rounded-2xl p-6">
+
+        <span class="inline-block bg-amber-500
+                     text-slate-950 text-xs font-bold
+                     px-3 py-1 rounded-lg">
+            MODO SIMULACIÓN
+        </span>
+
+        <h1 class="text-2xl font-bold mt-4">
+            🛡️ Administración de Guardias
+        </h1>
+
+        <p class="text-slate-300 text-sm mt-2">
+            Asigna usuarios registrados para atender
+            solicitudes simuladas del portón.
+        </p>
+
+    </section>
+
+    <!-- MENSAJES -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="bg-blue-50 border border-blue-200
+                    text-blue-900 p-4 rounded-xl">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- ASIGNAR GUARDIA -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm p-6">
+
+        <h2 class="text-xl font-bold text-slate-900">
+            Agregar guardia
+        </h2>
+
+        <p class="text-sm text-slate-500 mt-2 mb-5">
+            Selecciona una cuenta existente para
+            habilitar el panel del guardia.
+        </p>
+
+        <form method="post"
+              action="{% url 'portal:asignar_guardia' %}"
+              class="space-y-4">
+
+            {% csrf_token %}
+
+            <label for="user_id"
+                   class="block text-sm font-semibold
+                          text-slate-700">
+                Usuario registrado
+            </label>
+
+            <select name="user_id"
+                    id="user_id"
+                    required
+                    class="w-full border border-slate-300
+                           rounded-xl px-4 py-3
+                           bg-white">
+
+                <option value="">
+                    Selecciona un usuario
+                </option>
+
+                {% for usuario in candidatos %}
+
+                    <option value="{{ usuario.pk }}">
+                        {{ usuario.get_full_name|default:usuario.username }}
+                        — {{ usuario.username }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit"
+                    class="bg-blue-700 hover:bg-blue-800
+                           text-white font-bold
+                           px-6 py-3 rounded-xl">
+
+                + Designar como guardia
+
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- GUARDIAS REGISTRADOS -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-200">
+
+            <h2 class="text-xl font-bold text-slate-900">
+                Guardias registrados
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-2">
+                Usuarios habilitados para gestionar
+                solicitudes de acceso.
+            </p>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm text-left">
+
+                <thead class="bg-slate-50 text-slate-600">
+                    <tr>
+                        <th class="p-4">Usuario</th>
+                        <th class="p-4">Cargo</th>
+                        <th class="p-4">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for guardia in guardias %}
+
+                    <tr>
+
+                        <td class="p-4">
+
+                            <p class="font-bold text-slate-900">
+                                {{ guardia.get_full_name|default:guardia.username }}
+                            </p>
+
+                            <p class="text-xs text-slate-500">
+                                {{ guardia.username }}
+                            </p>
+
+                        </td>
+
+                        <td class="p-4">
+
+                            <span class="bg-emerald-100
+                                         text-emerald-800
+                                         px-3 py-1 rounded-full
+                                         text-xs font-bold">
+                                Guardia
+                            </span>
+
+                        </td>
+
+                        <td class="p-4">
+
+                            <form method="post"
+                                  action="{% url 'portal:quitar_guardia' guardia.pk %}"
+                                  onsubmit="return confirm('¿Quitar el cargo de guardia a este usuario?');">
+
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="bg-rose-100
+                                               text-rose-700
+                                               hover:bg-rose-200
+                                               font-semibold
+                                               px-4 py-2 rounded-lg">
+
+                                    Retirar cargo
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="3"
+                            class="p-10 text-center text-slate-500">
+                            Todavía no hay guardias asignados.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- VOLVER -->
+    <div class="flex flex-wrap gap-4">
+
+        <a href="{% url 'portal:gestionar_porton' %}"
+           class="text-blue-700 font-semibold text-sm">
+            ← Panel de Portón
+        </a>
+
+        <a href="{% url 'portal:directiva_dashboard' %}"
+           class="text-blue-700 font-semibold text-sm">
+            Panel Directiva
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

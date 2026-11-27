@@ -1,0 +1,193 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Administrar Grupos - Directiva{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <section class="bg-white p-6 rounded-2xl
+                    border border-slate-200 shadow-sm">
+
+        <div class="flex flex-col sm:flex-row
+                    justify-between sm:items-center gap-4">
+
+            <div>
+                <h1 class="text-2xl font-bold
+                           text-slate-900">
+                    Administrar Grupos de WhatsApp
+                </h1>
+
+                <p class="text-sm text-slate-500 mt-2">
+                    Agrega, edita y administra los grupos
+                    de comunicación de la comunidad.
+                </p>
+            </div>
+
+            <a href="{% url 'portal:crear_grupo' %}"
+               class="inline-flex justify-center
+                      bg-green-600 hover:bg-green-700
+                      text-white font-bold text-sm
+                      px-5 py-3 rounded-xl transition">
+
+                + Agregar grupo
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- LISTADO DE GRUPOS -->
+    {% if grupos %}
+
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {% for grupo in grupos %}
+
+        <article class="bg-white rounded-2xl
+                        border border-slate-200
+                        shadow-sm p-6">
+
+            <div class="flex items-start
+                        justify-between gap-3 mb-4">
+
+                <div class="w-12 h-12 bg-green-100
+                            rounded-xl flex items-center
+                            justify-center text-2xl">
+                    💬
+                </div>
+
+                {% if grupo.is_active %}
+
+                <span class="bg-green-100 text-green-700
+                             text-xs font-semibold
+                             px-3 py-1 rounded-full">
+                    Activo
+                </span>
+
+                {% else %}
+
+                <span class="bg-slate-100 text-slate-600
+                             text-xs font-semibold
+                             px-3 py-1 rounded-full">
+                    Desactivado
+                </span>
+
+                {% endif %}
+
+            </div>
+
+            <h2 class="text-xl font-bold
+                       text-slate-900 mb-2">
+                {{ grupo.name }}
+            </h2>
+
+            <p class="text-sm text-slate-500
+                      whitespace-pre-line break-words mb-4">{{ grupo.description|default:"Sin descripción." }}</p>
+
+            <p class="text-xs text-slate-400 mb-4">
+                Creado: {{ grupo.created_at|date:"d/m/Y" }}
+            </p>
+
+            <div class="border-t border-slate-100
+                        pt-4 space-y-4">
+
+                <!-- ENLACE DE INVITACIÓN -->
+                <a href="{{ grupo.invite_link }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="text-sm text-green-700
+                          hover:text-green-900
+                          font-semibold break-words">
+
+                    Ver invitación en WhatsApp ↗
+                </a>
+
+                <!-- ACCIONES -->
+                <div class="flex gap-3">
+
+                    <a href="{% url 'portal:editar_grupo' grupo.pk %}"
+                       class="flex-1 text-center
+                              bg-blue-100 hover:bg-blue-200
+                              text-blue-700 font-semibold
+                              text-sm px-4 py-3 rounded-xl
+                              transition">
+
+                        ✏️ Editar
+                    </a>
+
+                    <form method="post"
+                          action="{% url 'portal:eliminar_grupo' grupo.pk %}"
+                          class="flex-1"
+                          onsubmit="return confirm('¿Eliminar este grupo del portal? Esta acción no elimina el grupo de WhatsApp.');">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                                class="w-full bg-rose-100
+                                       hover:bg-rose-200
+                                       text-rose-700 font-semibold
+                                       text-sm px-4 py-3
+                                       rounded-xl transition">
+
+                            🗑️ Eliminar
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+    {% else %}
+
+    <section class="bg-white rounded-2xl
+                    border border-slate-200
+                    p-12 text-center">
+
+        <div class="text-5xl mb-4">💬</div>
+
+        <h2 class="text-xl font-bold mb-2">
+            Todavía no hay grupos registrados
+        </h2>
+
+        <p class="text-sm text-slate-500 mb-6">
+            Crea el primer grupo de WhatsApp de
+            tu comunidad.
+        </p>
+
+        <a href="{% url 'portal:crear_grupo' %}"
+           class="inline-flex bg-green-600
+                  hover:bg-green-700 text-white
+                  font-semibold px-5 py-3 rounded-xl">
+
+            Crear primer grupo
+
+        </a>
+
+    </section>
+
+    {% endif %}
+
+    <!-- REGRESAR -->
+    <a href="{% url 'portal:directiva_dashboard' %}"
+       class="inline-flex text-sm font-semibold
+              text-blue-700 hover:text-blue-900">
+
+        ← Volver al Panel Directiva
+
+    </a>
+
+</div>
+
+{% endblock %}

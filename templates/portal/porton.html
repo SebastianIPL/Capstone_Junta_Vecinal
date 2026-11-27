@@ -1,0 +1,330 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Control de Portón - Junta de Vecinos{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <section class="bg-slate-900 text-white rounded-2xl p-6 sm:p-8">
+
+        <div class="flex flex-col sm:flex-row
+                    justify-between items-start gap-4">
+
+            <div>
+                <span class="bg-amber-500 text-slate-950
+                             text-xs font-bold px-3 py-1
+                             rounded-lg">
+                    MODO SIMULACIÓN
+                </span>
+
+                <h1 class="text-2xl font-bold mt-4">
+                    🚪 Control de Portón
+                </h1>
+
+                <p class="text-slate-300 text-sm mt-2">
+                    Solicita acceso mediante una llamada
+                    o un SMS simulado.
+                </p>
+            </div>
+
+            <a href="{% url 'portal:dashboard' %}"
+               class="bg-slate-700 hover:bg-slate-600
+                      text-white px-4 py-2 rounded-lg text-sm">
+                Volver al portal
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- AVISO -->
+    <div class="bg-amber-50 border border-amber-200
+                text-amber-900 rounded-xl p-5 text-sm">
+
+        <strong>Versión de demostración:</strong>
+        al solicitar acceso, solo se creará un registro
+        en Django. No se realizará ninguna llamada,
+        no se enviará ningún SMS y no se abrirá
+        ningún portón físico.
+
+    </div>
+
+    <!-- MENSAJES -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="rounded-xl bg-blue-50 border
+                border-blue-200 text-blue-900
+                p-4 text-sm">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- PORTONES -->
+    {% if portones %}
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {% for porton in portones %}
+
+        <article class="bg-white rounded-2xl border
+                        border-slate-200 shadow-sm overflow-hidden">
+
+            <div class="p-6">
+
+                <div class="flex justify-between
+                            items-start gap-4">
+
+                    <div>
+                        <h2 class="text-xl font-bold
+                                   text-slate-900">
+                            {{ porton.name }}
+                        </h2>
+
+                        <p class="text-sm text-slate-500 mt-2">
+                            📍 {{ porton.location|default:"Ubicación no especificada" }}
+                        </p>
+                    </div>
+
+                    <div class="w-12 h-12 bg-blue-100
+                                rounded-xl flex items-center
+                                justify-center text-2xl">
+                        🚪
+                    </div>
+
+                </div>
+
+                {% if porton.description %}
+                <p class="text-sm text-slate-600 mt-4">
+                    {{ porton.description }}
+                </p>
+                {% endif %}
+
+                <div class="bg-slate-50 rounded-xl p-4 mt-5">
+
+                    <p class="text-xs text-slate-500">
+                        Número GSM ficticio
+                    </p>
+
+                    <p class="font-bold text-slate-900 mt-1">
+                        {{ porton.phone_number|default:"No configurado" }}
+                    </p>
+
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2
+                            gap-3 mt-5">
+
+                    <!-- LLAMADA SIMULADA -->
+                    <form method="post"
+                          action="{% url 'portal:solicitar_apertura' porton.id %}">
+
+                        {% csrf_token %}
+
+                        <input type="hidden"
+                               name="method"
+                               value="CALL">
+
+                        <button type="submit"
+                                class="w-full bg-emerald-600
+                                       hover:bg-emerald-700
+                                       text-white font-bold
+                                       px-5 py-4 rounded-xl
+                                       transition">
+
+                            📞 Simular llamada
+
+                        </button>
+
+                    </form>
+
+                    <!-- SMS SIMULADO -->
+                    <form method="post"
+                          action="{% url 'portal:solicitar_apertura' porton.id %}">
+
+                        {% csrf_token %}
+
+                        <input type="hidden"
+                               name="method"
+                               value="SMS">
+
+                        <button type="submit"
+                                class="w-full bg-blue-700
+                                       hover:bg-blue-800
+                                       text-white font-bold
+                                       px-5 py-4 rounded-xl
+                                       transition">
+
+                            💬 Simular SMS
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <p class="text-xs text-slate-500 mt-4 text-center">
+                    La solicitud quedará pendiente hasta
+                    que sea atendida por el guardia
+                    o la directiva.
+                </p>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </section>
+
+    {% else %}
+
+    <section class="bg-white border border-slate-200
+                    rounded-2xl p-12 text-center">
+
+        <div class="text-5xl mb-4">🚪</div>
+
+        <h2 class="text-xl font-bold text-slate-900">
+            No hay portones disponibles
+        </h2>
+
+        <p class="text-sm text-slate-500 mt-3">
+            La directiva todavía no ha configurado
+            ningún portón de demostración.
+        </p>
+
+    </section>
+
+    {% endif %}
+
+    <!-- HISTORIAL DEL VECINO -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-200">
+
+            <h2 class="text-xl font-bold text-slate-900">
+                Mis solicitudes de acceso
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Consulta el estado de tus últimas solicitudes.
+            </p>
+
+        </div>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full text-sm text-left">
+
+                <thead class="bg-slate-50 text-slate-600">
+                    <tr>
+                        <th class="p-4">Solicitud</th>
+                        <th class="p-4">Portón</th>
+                        <th class="p-4">Método</th>
+                        <th class="p-4">Fecha</th>
+                        <th class="p-4">Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for solicitud in solicitudes %}
+
+                    <tr>
+
+                        <td class="p-4">
+                            #{{ solicitud.id }}
+                        </td>
+
+                        <td class="p-4 font-medium">
+                            {{ solicitud.gate.name }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.get_method_display }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ solicitud.created_at|date:"d/m/Y H:i" }}
+                        </td>
+
+                        <td class="p-4">
+
+                            {% if solicitud.status == 'PENDING' %}
+
+                            <span class="bg-amber-100 text-amber-800
+                                         text-xs font-bold px-3 py-1
+                                         rounded-full">
+                                Pendiente
+                            </span>
+
+                            {% elif solicitud.status == 'APPROVED' %}
+
+                            <span class="bg-emerald-100 text-emerald-800
+                                         text-xs font-bold px-3 py-1
+                                         rounded-full">
+                                Aprobada (simulación)
+                            </span>
+
+                            {% else %}
+
+                            <span class="bg-rose-100 text-rose-800
+                                         text-xs font-bold px-3 py-1
+                                         rounded-full">
+                                Rechazada
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5"
+                            class="p-10 text-center text-slate-500">
+                            Todavía no tienes solicitudes registradas.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    {% if puede_atender %}
+    <div>
+        <a href="{% url 'portal:gestionar_porton' %}"
+           class="inline-flex bg-slate-900 text-white
+                  px-5 py-3 rounded-xl font-semibold text-sm">
+            🛡️ Ir al panel del guardia
+        </a>
+    </div>
+    {% endif %}
+
+<!-- COMUNICACIÓN CON GUARDIA -->
+<a href="{% url 'portal:chat_guardia_bandeja' %}"
+   class="inline-flex items-center gap-2
+          bg-purple-700 hover:bg-purple-800
+          text-white font-bold px-5 py-3
+          rounded-xl transition mt-5">
+
+    💬 Hablar con un guardia
+
+</a>
+
+
+</div>
+
+{% endblock %}

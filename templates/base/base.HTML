@@ -1,87 +1,178 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Sistema Unidad Territorial{% endblock %}</title>
-    <!-- Tailwind CSS CDN -->
+
+    <title>
+        {% block title %}Sistema Unidad Territorial{% endblock %}
+    </title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- Barra de Navegación Principal -->
+    <!-- BARRA SUPERIOR -->
     <nav class="bg-blue-800 text-white shadow-md">
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                
-                <!-- Logo y Nombre -->
-                <div class="flex items-center space-x-3">
-                    <a href="{% url 'portal:dashboard' %}" class="text-xl font-bold tracking-wide hover:text-blue-100 transition">
+
+            <div class="flex flex-wrap justify-between
+                        items-center gap-3 min-h-16 py-3">
+
+                <!-- LOGO Y NOMBRE -->
+                <div class="flex items-center gap-3">
+
+                    <a href="{% url 'portal:dashboard' %}"
+                       class="text-lg sm:text-xl font-bold
+                              tracking-wide hover:text-blue-100
+                              transition">
+
                         Junta de Vecinos
+
                     </a>
-                    <span class="text-xs bg-blue-700 px-2 py-1 rounded text-blue-200">Portal Vecinal</span>
+
+                    <span class="hidden sm:inline text-xs
+                                 bg-blue-700 px-2 py-1
+                                 rounded text-blue-200">
+
+                        Portal Vecinal
+
+                    </span>
+
                 </div>
 
-                <!-- Acceso de Usuario y Roles Directivos -->
-                <div class="flex items-center space-x-3">
+                <!-- USUARIO Y SESIÓN -->
+                <div class="flex flex-wrap items-center gap-3">
+
                     {% if user.is_authenticated %}
-                        <span class="text-sm font-medium text-blue-100 hidden sm:inline">
-                            Hola, {{ user.first_name|default:user.username }}
+
+                        <!-- SALUDO -->
+                        <span class="text-sm font-medium
+                                     text-blue-100 hidden sm:inline">
+
+                            Hola,
+                            {{ user.first_name|default:user.username }}
+
                         </span>
 
-                        <!-- Botón exclusivo para miembros de la Directiva o Staff -->
-                        {% if user.is_staff or user.role == 'DIRECTIVA' %}
-                            <a href="{% url 'portal:directiva_dashboard' %}" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg shadow-sm transition">
-                                Panel Directiva
-                            </a>
+                        <!-- PANEL DIRECTIVA -->
+                        {% if user.is_staff or user.role == 'DIRECTIVA' or user.role == 'ADMIN' %}
+
+                        <a href="{% url 'portal:directiva_dashboard' %}"
+                           class="text-xs bg-amber-500
+                                  hover:bg-amber-600 text-slate-950
+                                  font-bold px-3 py-2 rounded-lg
+                                  shadow-sm transition whitespace-nowrap">
+
+                            Panel Directiva
+
+                        </a>
+
                         {% endif %}
 
-                        <form method="post" action="{% url 'portal:logout' %}" class="inline">
+                        <!-- CERRAR SESIÓN -->
+                        <form method="post"
+                              action="{% url 'portal:logout' %}">
+
                             {% csrf_token %}
-                            <button type="submit" class="text-xs bg-blue-900 hover:bg-blue-950 px-3 py-1.5 rounded-lg transition border border-blue-700">
+
+                            <button type="submit"
+                                    class="text-xs bg-blue-900
+                                           hover:bg-blue-950 px-3 py-2
+                                           rounded-lg border
+                                           border-blue-700 transition">
+
                                 Cerrar Sesión
+
                             </button>
+
                         </form>
+
                     {% else %}
-                        <a href="{% url 'portal:login' %}" class="text-sm bg-white text-blue-800 hover:bg-blue-50 font-semibold px-4 py-2 rounded-lg transition shadow-sm">
+
+                        <!-- INICIAR SESIÓN -->
+                        <a href="{% url 'portal:login' %}"
+                           class="text-sm bg-white text-blue-800
+                                  hover:bg-blue-50 font-semibold
+                                  px-4 py-2 rounded-lg transition">
+
                             Iniciar Sesión
+
                         </a>
+
                     {% endif %}
+
                 </div>
 
             </div>
+
         </div>
 
-        <!-- Menú Móvil secundario horizontal con scroll -->
-        {% if user.is_authenticated %}
-        <div class="md:hidden flex overflow-x-auto space-x-4 px-4 py-2 bg-blue-900 text-xs font-medium text-blue-200 border-t border-blue-800">
-            <a href="{% url 'portal:mis_certificados' %}" class="whitespace-nowrap hover:text-white">Certificados</a>
-            <a href="{% url 'spaces:mis_reservas' %}" class="whitespace-nowrap hover:text-white">Espacios Comunes</a>
-            <a href="{% url 'portal:camaras' %}" class="whitespace-nowrap hover:text-white">Cámaras</a>
-            <a href="{% url 'portal:chat' %}" class="whitespace-nowrap hover:text-white">Chat</a>
-        </div>
-        {% endif %}
     </nav>
 
-    <!-- Contenedor Principal dinámico -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Mensajes Flash del Sistema (éxito, error, advertencias) -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-grow max-w-7xl w-full mx-auto
+                 px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- MENSAJES DEL SISTEMA -->
         {% if messages %}
-            <div class="mb-6 space-y-2">
-                {% for message in messages %}
-                    <div class="p-4 rounded-xl text-sm font-medium {% if message.tags == 'error' %}bg-rose-100 text-rose-800 border border-rose-200{% else %}bg-emerald-100 text-emerald-800 border border-emerald-200{% endif %} shadow-sm">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+
+        <div class="mb-6 space-y-3">
+
+            {% for message in messages %}
+
+            <div class="p-4 rounded-xl text-sm
+                        font-medium shadow-sm
+
+                        {% if 'error' in message.tags %}
+                            bg-rose-100 text-rose-800
+                            border border-rose-200
+
+                        {% elif 'warning' in message.tags %}
+                            bg-amber-100 text-amber-800
+                            border border-amber-200
+
+                        {% else %}
+                            bg-emerald-100 text-emerald-800
+                            border border-emerald-200
+
+                        {% endif %}">
+
+                {{ message }}
+
             </div>
+
+            {% endfor %}
+
+        </div>
+
         {% endif %}
 
-        {% block content %}{% endblock %}
+        <!-- PÁGINAS DEL SISTEMA -->
+        {% block content %}
+        {% endblock %}
+
     </main>
 
-    <!-- Pie de Página -->
-    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-        Sistema Unidad Territorial &copy; {% now "Y" %} - Gestión Comunitaria Transparente
+    <!-- PIE DE PÁGINA -->
+    <footer class="bg-white border-t border-slate-200 py-5">
+
+        <div class="max-w-7xl mx-auto px-4 text-center">
+
+            <p class="text-xs text-slate-500">
+
+                Sistema Unidad Territorial
+                &copy; {% now "Y" %}
+                - Gestión Comunitaria Transparente
+
+            </p>
+
+        </div>
+
     </footer>
 
 </body>

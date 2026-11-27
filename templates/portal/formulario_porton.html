@@ -1,0 +1,186 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}{{ titulo }} - Control de Portón{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto space-y-6">
+
+    <a href="{% url 'portal:gestionar_porton' %}"
+       class="inline-flex text-blue-700
+              font-semibold text-sm hover:underline">
+        ← Volver al panel de accesos
+    </a>
+
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm overflow-hidden">
+
+        <!-- ENCABEZADO -->
+        <div class="bg-slate-900 text-white p-6">
+
+            <span class="bg-amber-500 text-slate-950
+                         text-xs font-bold px-3 py-1
+                         rounded-lg">
+                CONFIGURACIÓN DE PRUEBA
+            </span>
+
+            <h1 class="text-2xl font-bold mt-4">
+                {{ titulo }}
+            </h1>
+
+            <p class="text-sm text-slate-300 mt-2">
+                Administra los datos ficticios
+                de un portón comunitario.
+            </p>
+
+        </div>
+
+        <!-- FORMULARIO -->
+        <form method="post"
+              class="p-6 sm:p-8 space-y-6">
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-rose-50 text-rose-700
+                        border border-rose-200
+                        p-4 rounded-xl text-sm">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <!-- NOMBRE -->
+            <div>
+
+                <label for="{{ form.name.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Nombre del portón
+                </label>
+
+                {{ form.name }}
+
+                {% for error in form.name.errors %}
+                <p class="text-sm text-rose-600 mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- UBICACIÓN -->
+            <div>
+
+                <label for="{{ form.location.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Ubicación
+                </label>
+
+                {{ form.location }}
+
+                {% for error in form.location.errors %}
+                <p class="text-sm text-rose-600 mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- NÚMERO FICTICIO -->
+            <div>
+
+                <label for="{{ form.phone_number.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Número telefónico simulado
+                </label>
+
+                {{ form.phone_number }}
+
+                <p class="text-xs text-slate-500 mt-2">
+                    Ejemplo: +56 9 0000 0000.
+                    El sistema no llamará ni enviará SMS
+                    a este número.
+                </p>
+
+                {% for error in form.phone_number.errors %}
+                <p class="text-sm text-rose-600 mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- DESCRIPCIÓN -->
+            <div>
+
+                <label for="{{ form.description.id_for_label }}"
+                       class="block text-sm font-bold
+                              text-slate-700 mb-2">
+                    Descripción
+                </label>
+
+                {{ form.description }}
+
+                {% for error in form.description.errors %}
+                <p class="text-sm text-rose-600 mt-2">
+                    {{ error }}
+                </p>
+                {% endfor %}
+
+            </div>
+
+            <!-- ESTADO -->
+            <div class="bg-blue-50 border border-blue-200
+                        rounded-xl p-5">
+
+                <div class="flex items-center gap-3">
+
+                    {{ form.is_active }}
+
+                    <label for="{{ form.is_active.id_for_label }}"
+                           class="font-bold text-blue-900 text-sm">
+                        Permitir solicitudes simuladas
+                    </label>
+
+                </div>
+
+                <p class="text-xs text-blue-800 mt-3">
+                    Si desactivas esta opción, los vecinos
+                    ya no podrán crear nuevas solicitudes
+                    para este portón. Su historial se conserva.
+                </p>
+
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="flex flex-col sm:flex-row
+                        gap-3 pt-5 border-t border-slate-200">
+
+                <button type="submit"
+                        class="flex-1 bg-blue-700
+                               hover:bg-blue-800
+                               text-white font-bold
+                               px-6 py-3 rounded-xl">
+                    Guardar portón
+                </button>
+
+                <a href="{% url 'portal:gestionar_porton' %}"
+                   class="flex-1 bg-slate-100
+                          hover:bg-slate-200
+                          text-slate-700 font-semibold
+                          text-center px-6 py-3 rounded-xl">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>
+
+{% endblock %}

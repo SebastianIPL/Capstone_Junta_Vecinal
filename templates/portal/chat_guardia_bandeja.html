@@ -1,0 +1,204 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Chat con Guardia{% endblock %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto space-y-6">
+
+    <section class="bg-slate-900 text-white rounded-2xl p-6">
+
+        <span class="inline-block bg-amber-500
+                     text-slate-950 text-xs font-bold
+                     px-3 py-1 rounded-lg">
+            MODO SIMULACIÓN
+        </span>
+
+        <h1 class="text-2xl font-bold mt-4">
+            🛡️ Chat con Guardia
+        </h1>
+
+        <p class="text-slate-300 text-sm mt-2">
+            {% if es_guardia %}
+                Revisa los mensajes enviados por los vecinos.
+            {% else %}
+                Comunícate directamente con un guardia
+                de la comunidad.
+            {% endif %}
+        </p>
+
+    </section>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="bg-blue-50 border border-blue-200
+                        text-blue-900 p-4 rounded-xl">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if not es_guardia %}
+
+    <!-- INICIAR CONVERSACIÓN -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl p-6 shadow-sm">
+
+        <h2 class="text-xl font-bold text-slate-900 mb-2">
+            Iniciar conversación
+        </h2>
+
+        <p class="text-sm text-slate-500 mb-5">
+            Selecciona el guardia con el que deseas hablar.
+        </p>
+
+        {% if guardias_disponibles %}
+
+        <form method="post"
+              action="{% url 'portal:chat_guardia_iniciar' %}"
+              class="flex flex-col sm:flex-row gap-3">
+
+            {% csrf_token %}
+
+            <select name="guardia_id"
+                    required
+                    class="flex-1 border border-slate-300
+                           px-4 py-3 rounded-xl bg-white">
+
+                <option value="">
+                    Selecciona un guardia
+                </option>
+
+                {% for guardia in guardias_disponibles %}
+                <option value="{{ guardia.pk }}">
+                    {{ guardia.get_full_name|default:guardia.username }}
+                </option>
+                {% endfor %}
+
+            </select>
+
+            <button type="submit"
+                    class="bg-blue-700 hover:bg-blue-800
+                           text-white font-bold
+                           px-6 py-3 rounded-xl">
+                Abrir chat
+            </button>
+
+        </form>
+
+        {% else %}
+
+        <p class="text-amber-700 bg-amber-50
+                  rounded-xl p-4">
+            Todavía no hay guardias asignados.
+            La directiva debe designar uno primero.
+        </p>
+
+        {% endif %}
+
+    </section>
+
+    {% endif %}
+
+    <!-- CONVERSACIONES -->
+    <section class="bg-white border border-slate-200
+                    rounded-2xl shadow-sm overflow-hidden">
+
+        <div class="p-6 border-b border-slate-200">
+
+            <h2 class="text-xl font-bold text-slate-900">
+                {% if es_guardia %}
+                    Mensajes de vecinos
+                {% else %}
+                    Mis conversaciones
+                {% endif %}
+            </h2>
+
+            <p class="text-sm text-slate-500 mt-1">
+                Selecciona una conversación para leer
+                o enviar mensajes.
+            </p>
+
+        </div>
+
+        <div class="divide-y divide-slate-100">
+
+            {% for conversacion in conversaciones %}
+
+            <a href="{% url 'portal:chat_guardia_conversacion' conversacion.pk %}"
+               class="flex justify-between items-center
+                      gap-4 p-5 hover:bg-slate-50 transition">
+
+                <div class="flex items-center gap-4">
+
+                    <div class="w-12 h-12 rounded-full
+                                bg-blue-100 flex items-center
+                                justify-center text-xl">
+                        {% if es_guardia %}👤{% else %}🛡️{% endif %}
+                    </div>
+
+                    <div>
+
+                        <h3 class="font-bold text-slate-900">
+
+                            {% if es_guardia %}
+                                {{ conversacion.resident.get_full_name|default:conversacion.resident.username }}
+                            {% else %}
+                                {{ conversacion.guard.get_full_name|default:conversacion.guard.username }}
+                            {% endif %}
+
+                        </h3>
+
+                        <p class="text-xs text-slate-500 mt-1">
+                            Actualizado:
+                            {{ conversacion.updated_at|date:"d/m/Y H:i" }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <span class="text-blue-700 font-semibold text-sm">
+                    Ver chat →
+                </span>
+
+            </a>
+
+            {% empty %}
+
+            <div class="p-12 text-center">
+
+                <div class="text-5xl mb-4">💬</div>
+
+                <h3 class="font-bold text-slate-900">
+                    Sin conversaciones todavía
+                </h3>
+
+                <p class="text-slate-500 text-sm mt-2">
+                    {% if es_guardia %}
+                        Los mensajes enviados por vecinos
+                        aparecerán aquí.
+                    {% else %}
+                        Selecciona un guardia para iniciar
+                        tu primera conversación.
+                    {% endif %}
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    <a href="{% url 'portal:porton' %}"
+       class="inline-block text-blue-700
+              font-semibold text-sm">
+        ← Volver al portón
+    </a>
+
+</div>
+
+{% endblock %}

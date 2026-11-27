@@ -36,5 +36,17 @@
             Ingresar al Portal
         </button>
     </form>
+    <p class="text-sm text-gray-600 mt-4">
+  Utilizamos tus datos para gestionar tu cuenta
+  y los servicios comunitarios.
+
+  <a href="{% url 'residents:privacidad' %}">
+    Política de Privacidad
+  </a>
+</p>
+
+<a href="{% url 'residents:registro' %}">
+  ¿Eres vecino nuevo? Solicita tu registro
+</a>
 </div>
 {% endblock %}
