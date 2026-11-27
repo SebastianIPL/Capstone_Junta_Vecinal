@@ -1,8 +1,23 @@
-venv
-__pycache__
-*.pyc
-db.sqlite3
-.git
+
+venv/
+.venv/
+.git/
 .gitignore
-Cap Documentos
-media
+
+__pycache__/
+*.pyc
+
+.env
+.env.*
+!.env.example
+
+db.sqlite3
+*.sqlite3
+
+media/
+private/
+backups/
+staticfiles/
+
+Cap Documentos/
+*.log

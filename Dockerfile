@@ -1,23 +1,25 @@
-# 1. Imagen base oficial y ligera de Python
+
 FROM python:3.13-slim
 
-# 2. Evitar escritura de bytecode y habilitar logs limpios
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# 3. Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# 4. Copiar e instalar requerimientos
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libpq5 \
+    && rm -rf /var/lib/apt/lists/*
 
-# 5. Copiar el código del proyecto
-COPY . /app/
+COPY requirements-docker.txt .
 
-# 6. Puerto estándar de Django
+RUN pip install --no-cache-dir -r requirements-docker.txt
+
+COPY . .
+RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
-# 7. Comando de ejecución
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "config.wsgi:application", \
+     "--bind", "0.0.0.0:8000", \
+     "--workers", "2", \
+     "--timeout", "120"]
